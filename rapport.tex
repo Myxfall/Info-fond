@@ -1,0 +1,90 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\pagestyle{headings}
+\title{Projet : INFO-F-302 Informatique Fondamentale.}
+\author{George Rusu et Maximilien Romain}
+\date{\today}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\section{Introduction}
+Le premier objectif de ce projet est de modeliser divers problemes en problemes de satisfaction de contraintes (CSP). Le second objectif est d’implementer un programme resolvant ces problemes en utilisant ChocoSolver.
+
+\textbf{link} :  http://www-master.ufr-info-p6.jussieu.fr/2005/IMG/pdf/rp3.pdf
+
+\section{Question 1}
+L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
+\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
+\textbf{Domaines : }
+$ D = \{Vide, tour, fous, cavalier \} $ \\
+$ D = (vide, fous, cavalier, tour) $, $D_i$ étant le domaine de la variable $x_{i,j}$
+
+\textbf{Contraintes : }\\
+Contrainte{ Xij si Di=F alors {pour nimporte quel i=j -> xij}}
+Contrainte{ Xij si Di=T alors {pour un i,j -> tout les j xij et tout les i de xij}}
+Contrainte{ Xij si Di=c alors {pour un i,j -> tout les j de xij + tout les i de xin, tout les i de xij + tout les j de xnj}}
+
+$ \{ x_{i,j} \wedge tour \rightarrow x_{i,j} (\forall algo crois) \wedge vide \} $
+
+$\forall x_{i,j} \in D_4 : \exists l=n : (\forall x_{l,j} \in D_1, l \neq j) \wedge (\forall x_{i,l} \in D_1, l \neq i)$
+
+$ c_1 = (\{x_1, x_2\},(b_i, b_j)| b_i = T, b_j = vide \lor b_i = vide, b_j = T) $
+
+\textbf{Contraintes tour}\\
+$ c_{T_{col},j} = ((x_{1,j}, x_{2,j},\ldots, x_{n,j}), \{(b_1, b_2,\ldots, b_n) | b_i = T, b_j = V, \forall j \ne i\})$ pour les colonnes
+
+$ c_{T_{ligne},j} = ((x_{i,1}, x_{i,2},\ldots, x_{i,n}), \{(b_1, b_2,\ldots, b_n) | b_i = T, b_j = V, \forall j \ne i\})$ pour les lignes
+
+\textbf{Contraintes fou}\\
+$ c_{F,2*n-2} = (\{x_{1,n-1}, x_{2,n}\}, (b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F) \land (\{x_{1,2}, x_{2,1}\}, (b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F) $ \\
+\vdots \\
+$ c_{F,n+1} = (\{x_{1,2}, x_{2,3}, \ldots, x_{n-1,n}\}, (b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i) \land (\{x_{1,n-1},x_{2,n-2}, \ldots, x_{n-1,1}\}, (b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i) $ \\
+$ c_{F,n} = (\{x_{1,1}, x_{2,2},\ldots, x_{n,n}\}, (b_1, b_2, \ldots, b_n)|b_i = F, b_j = V, \forall j \ne i\}) \land (\{x_{1,n}, x_{2,n-1}, \ldots, x_{n, 1}\}, (b_1, b_2, \ldots, b_n)|b_i = F, b_j = V, \forall j \ne i)$ \\
+$ c_{F,n-1} = (\{x_{2,1}, x_{3,2},\ldots, x_{n, n-1}\}, (b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i) \land (\{x_{2,n}, x_{3,n-1}, \ldots, x_{n,2}\}, (b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i) $ \\
+\vdots \\
+$ c_{F,2} = (\{x_{n-1,1}, x_{n,2}\}, (b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F) \land (\{x_{n-1,n}, x_{n,n-1}\}, (b_1, b_2)|b_1 = F, b_2 = V \lor b_1 = V, b_2 = F) $
+
+
+\begin{equation}
+\left( \begin{array}{ccccc}
+c_{F,n} & c_{F,n+1} & \dots & c_{F,2*n-2} & \hfill \\
+c_{F,n-1} & c_{F,n} & c_{F,n+1} & \vdots&  c_{F,2*n-2}\\
+\vdots & c_{F,n-1} & c_{F,n} &c_{F,n+1} & \vdots \\
+c_{F,2}& \vdots & c_{F,n-1}& c_{F,n} &c_{F,n+1} \\
+\hfill & c_{F,2} & \dots& c_{F,n-1} & c_{F,n} \\
+\end{array} \right)
+\end{equation}
+
+\textbf{Contraintes cavalier:}\\
+$ c_{C,(i,j)} = (\{x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}\}, (b_1, b_2, \ldots, b_9)|b_1 = C, b_2, \ldots b_9 = V) $
+
+
+\section{Question 2}
+L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
+\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
+\textbf{Domaines : }
+$ D = \{Vide, tour, fous, cavalier \} $ $D_i$ étant le domaine de la variable $x_{i,j}$
+
+\textbf{Contraintes:}\\
+$ c = (\{x_{i,j} \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ au moins un pions qui menace $x_{i,j} )$
+$ x_{i,j} = V \land $
+
+\section{Question 3}
+
+\section{Question Bonus}
+
+\section{Question 4}
+
+\section{Question 5}
+
+\end{document}
