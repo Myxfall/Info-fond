@@ -21,11 +21,11 @@ public class Echec {
 		
 		
 	}
-	private int calcT(IntVar[][] echequier){
+	private int calc(IntVar[][] echequier,int piece){
 		int count=0;
 		for (int i=0;i<this.n;i++){
 			for (int j=0;j<this.n;j++){
-				if (echequier[i][j].contains(1)){
+				if (echequier[i][j].contains(piece)){
 					count+=1;
 				}
 			}
@@ -47,7 +47,7 @@ public class Echec {
 				}else if (echequier[i][j].contains(2)){
 					line+="C";
 				}
-				line+="  ";
+				line+=" ";
 			}
 			System.out.println(line);
 		}
@@ -62,11 +62,19 @@ public class Echec {
 					//contraintes pour la tour
 					model.ifThen(model.arithm(echequier[i][j],"=", 1), model.arithm(echequier[i][l], "=", 0));
 					model.ifThen(model.arithm(echequier[i][j],"=", 1), model.arithm(echequier[l][i], "=", 0));
-					model.arithm(model.intVar(this.calcT(echequier)), "<=", this.t);
+					model.arithm(model.intVar(this.calc(echequier,1)), "<=", this.t);
 					
 					//contraintes pour le cavalier
 					
 				}
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i+1][j+2], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i+1][j-2], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i-1][j+2], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i-1][j-2], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i+2][j+1], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i+2][j-1], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i-2][j+1], "=", 0));
+				model.ifThen(model.arithm(echequier[i][j],"=", 3), model.arithm(echequier[i-2][j-1], "=", 0));
 			}
 			
 		}
