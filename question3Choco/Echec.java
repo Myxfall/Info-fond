@@ -14,10 +14,10 @@ public class Echec {
 	
 	
 	public Echec(int n,int t, int f, int c){
-		this.n=3;
-		this.t=1;
-		this.f=1;
-		this.c=1;
+		this.n=n;
+		this.t=t;
+		this.f=f;
+		this.c=c;
 		
 		
 	}
@@ -83,16 +83,15 @@ public class Echec {
 					}
 				}
 				//contrainte fou
-				//Constraint c3= model.arithm(echequier[i][j], ">=", this.t+1);
-				//Constraint c4= model.arithm(echequier[i][j], "<=", this.t+this.f);
-				
+				Constraint c3= model.arithm(echequier[i][j], ">=", this.t+1);
+				Constraint c4= model.arithm(echequier[i][j], "<=", this.t+this.f);
+				model.ifThen(model.and(c3,c4),model.arithm(echequier[3][2], "=", this.t+1));
+				//model.ifThen(model.and(c3,c4),model.arithm(echequier[3][3], "=", this.t+this.f));
 				/*
 				 * fou
 				 */
 				
-
-		/*for (int i=0;i<this.n;i++){
-			for (int j=0;j<this.n;j++){*/
+				
 				//contrainte cavalier
 				Constraint c5= model.arithm(echequier[i][j], ">=", this.t+this.f+1);
 				Constraint c6= model.arithm(echequier[i][j], "<=", this.t+this.f+this.c);
@@ -152,7 +151,9 @@ public class Echec {
 		
 		//Solution solution = model.getSolver().findSolution();
 		Solver solver = model.getSolver();
+		System.out.print("After Solve");
 		if(solver.solve()){
+			System.out.print("Not ready yet");
 		    this.printingBoard(echequier);
 		}else {
 		    System.out.println("The solver has proved the problem has no solution");
