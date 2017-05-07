@@ -76,6 +76,9 @@ public class Echec {
 		ArrayList<Constraint> ContraintesT= new ArrayList<Constraint>();
 		ArrayList<Constraint> ContraintesF= new ArrayList<Constraint>();
 		ArrayList<Constraint> ContraintesC= new ArrayList<Constraint>();
+		ArrayList<Constraint> tmp= new ArrayList<Constraint>();
+		ArrayList<Constraint> tmp1= new ArrayList<Constraint>();
+		ArrayList<Constraint> tmp2= new ArrayList<Constraint>();
 		for (int i=0;i<this.n;i++){
 			for (int j=0;j<this.n;j++){
 				
@@ -83,8 +86,8 @@ public class Echec {
 				for (int l=0;l<this.n;l++){
 					for (int k=0;k<this.n;k++){
 						if ((i!=l) || (j!=k)){
-							Constraint tmp=model.arithm(echequier[i][j], "!=", echequier[l][k]); //verification que chaque case est unique
-							ContraintesUnique.add(tmp);
+							 //verification que chaque case est unique
+							ContraintesUnique.add(model.arithm(echequier[i][j], "!=", echequier[l][k]));
 						}
 					}
 				}
@@ -93,22 +96,27 @@ public class Echec {
 				Constraint c1= model.arithm(echequier[i][j], ">=", 1);
 				Constraint c2= model.arithm(echequier[i][j], "<=", this.t);
 				Constraint contrainteT=model.and(c1,c2);
+				tmp.clear();
 				for (int l=0;l<this.n;l++){
 					if (j!=l){
-						Constraint tmp=model.and(contrainteT,model.arithm(echequier[i][l], ">=", this.t+this.c+this.f)); //vide ligne
-						ContraintesT.add(tmp);
+						tmp.add(model.and(contrainteT,model.arithm(echequier[i][l], ">=", this.t+this.c+this.f))); //vide ligne
+						
 						
 					}
 					if(i!=l){
-						Constraint tmp=model.and(contrainteT,model.arithm(echequier[l][j], ">", this.t+this.c+this.f)); //vide colonne
-						ContraintesT.add(tmp);
+						tmp.add(model.and(contrainteT,model.arithm(echequier[l][j], ">", this.t+this.c+this.f))); //vide colonne
 					}
 				}
+				ContraintesT.add(model.and(tmp.toArray(new Constraint[]{})));
 				
 				//contrainte fou
 				Constraint c3= model.arithm(echequier[i][j], ">=", this.t+1);
 				Constraint c4= model.arithm(echequier[i][j], "<=", this.t+this.f);
 				Constraint contrainteF=model.and(c3,c4);
+				tmp.clear();
+				tmp1.clear();
+				tmp2
+				.clear();
 				 //diagonale gauche vers la droite
 				int ligne=0;
 				int colonne=0;
@@ -117,15 +125,17 @@ public class Echec {
 					colonne=j+k;
 					if (((0<=ligne) && (ligne<this.n)) && ((0<=colonne) && (colonne<this.n))){
 						if ((ligne!=i) && (colonne!=j)){
-							Constraint tmp=model.and(contrainteF,model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f));
-							ContraintesF.add(tmp);
+							tmp1.add(model.and(contrainteF,model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f)));
+							//ContraintesF.add(tmp);
 							//model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f).post();
 						}
-						//model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f).post():
-						
+						//model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f).post():	
 					}
-					
 				}
+				if( !tmp1.isEmpty()){
+					tmp.add(model.and(tmp1.toArray(new Constraint[]{})));
+				}
+				
 				//diagonale droite vers la gauche
 				ligne=0;
 				colonne=0;
@@ -135,76 +145,90 @@ public class Echec {
 					if (((0<=ligne) && (ligne<this.n)) && ((0<=colonne) && (colonne<this.n))){
 						if ((ligne!=i) && (colonne!=j)){
 							//model.ifThen(model.and(c3,c4),model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f));
-							Constraint tmp=model.and(contrainteF,model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f));
-							ContraintesF.add(tmp);
+							tmp2.add(model.and(contrainteF,model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f)));
 						}
 					}
 				}
-						
+				if( !tmp2.isEmpty()){
+					tmp.add(model.and(tmp2.toArray(new Constraint[]{})));
+				}
+				//Constraint test=model.and(tmp.toArray(new Constraint[]{}));
+				if( !tmp.isEmpty()){
+					//model.and(tmp.toArray(new Constraint[]{}));
+					ContraintesF.add(model.and(tmp.toArray(new Constraint[]{})));
+				}
+				//ContraintesF.add(model.and(tmp.toArray(new Constraint[]{})));
+				//ContraintesF.add(test);
+				
 				Constraint c5= model.arithm(echequier[i][j], ">=", this.t+this.f+1);
 				Constraint c6= model.arithm(echequier[i][j], "<=", this.t+this.f+this.c);
 				Constraint contrainteC=model.and(c5,c6);
+				tmp.clear();
 				if ((i+1<this.n) && (j+2<this.n)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i+1][j+2], ">", this.t+this.c+this.f));
 					//model.arithm(echequier[i+1][j+2], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i+1][j+2], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i+1][j+2], ">", this.t+this.c+this.f)));
+					//ContraintesC.add(tmp);
 				}
 				if ((i+1<this.n) && (j-2>=0)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i+1][j-2], ">", this.t+this.c+this.f)); 
 					//model.arithm(echequier[i+1][j-2], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i+1][j-2], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i+1][j-2], ">", this.t+this.c+this.f)));
+					//ContraintesC.add(tmp);
 				}
 				if ((i-1>=0) && (j+2<this.n)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i-1][j+2], ">", this.t+this.c+this.f)); vide
 					//model.arithm(echequier[i-1][j+2], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i-1][j+2], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i-1][j+2], ">", this.t+this.c+this.f)));
+					//ContraintesC.add(tmp);
 				}
 				if ((i-1>=0) && (j-2>=0)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i-1][j-2], ">", this.t+this.c+this.f)); //vide
 					//model.arithm(echequier[i-1][j-2], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i-1][j-2], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i-1][j-2], ">", this.t+this.c+this.f)));
+					//ContraintesC.add(tmp);
 				}
 				if ((i+2<this.n) && (j+1<this.n)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i+2][j+1], ">", this.t+this.c+this.f)); //vide
 					//model.arithm(echequier[i+2][j+1], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i+2][j+1], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i+2][j+1], ">", this.t+this.c+this.f)));
+					
 				}
 				if ((i+2<this.n) && (j-1>=0)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i+2][j-1], ">", this.t+this.c+this.f)); //vide
 					//model.arithm(echequier[i+2][j-1], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i+2][j-1], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i+2][j-1], ">", this.t+this.c+this.f)));
 				}
 				if ((i-2>=0) && (j+1<this.n)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i-2][j+1], ">", this.t+this.c+this.f)); //vide
 					//model.arithm(echequier[i-2][j+1], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i-2][j+1], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i-2][j+1], ">", this.t+this.c+this.f)));
+					//ContraintesC.add(tmp);
 				}
 				if ((i-2>=0) && (j-1>=0)){
 					//model.ifThen(model.and(c5,c6),model.arithm(echequier[i-2][j-1], ">", this.t+this.c+this.f)); //vide
 					//model.arithm(echequier[i-2][j-1], ">", this.t+this.c+this.f).post();
-					Constraint tmp=model.and(contrainteC,model.arithm(echequier[i-2][j-1], ">", this.t+this.c+this.f));
-					ContraintesC.add(tmp);
+					tmp.add(model.and(contrainteC,model.arithm(echequier[i-2][j-1], ">", this.t+this.c+this.f)));
+					
 				}
 				
-				//model.eva
+				if (!tmp.isEmpty()){
+					ContraintesC.add(model.and(tmp.toArray(new Constraint[]{})));
+				}//model.eva
 				
 				
 					
 			}
 		}
 		Constraint allUnique=model.and(ContraintesUnique.toArray(new Constraint[]{})); 
+		/*Constraint allTour=model.or(ContraintesT.toArray(new Constraint[]{}));
+		Constraint allFou=model.or(ContraintesF.toArray(new Constraint[]{}));
+		Constraint allCavalier=model.or(ContraintesC.toArray(new Constraint[]{}));*/
 		Constraint allTour=model.or(ContraintesT.toArray(new Constraint[]{}));
 		Constraint allFou=model.or(ContraintesF.toArray(new Constraint[]{}));
 		Constraint allCavalier=model.or(ContraintesC.toArray(new Constraint[]{}));
-		model.and(allUnique).post();
-		model.or(allTour,allFou,allCavalier).post();
+		//model.and(allUnique).post();
+		model.and(allUnique,allTour,allFou,allCavalier).post();
 		//model.and(allFou).post();
 
 		//Solution solution = model.getSolver().findSolution();
