@@ -62,14 +62,15 @@ public class Echec {
 
 		ArrayList<Constraint> ContraintesUnique= new ArrayList<Constraint>();
 		ArrayList<Constraint> ALLContraintes= new ArrayList<Constraint>();
-		ArrayList<Constraint> contrainteCase= new ArrayList<Constraint>();
-		//ArrayList<Constraint> ContraintesC= new ArrayList<Constraint>();
+		Constraint ContraintesT= null;
+		Constraint ContraintesF= null;
+		Constraint ContraintesC= null;
 		ArrayList<Constraint> tmp= new ArrayList<Constraint>();
 		ArrayList<Constraint> tmp1= new ArrayList<Constraint>();
 		ArrayList<Constraint> tmp2= new ArrayList<Constraint>();
 		for (int i=0;i<this.n;i++){
 			for (int j=0;j<this.n;j++){
-				System.out.print("\nDebut"+ i+ " "+ j+ "\n");
+				//System.out.print("\nDebut"+ i+ " "+ j+ "\n");
 				//verification que chaque case est unique
 				for (int l=0;l<this.n;l++){
 					for (int k=0;k<this.n;k++){
@@ -99,7 +100,8 @@ public class Echec {
 					}
 				}
 				if(!tmp.isEmpty()){
-					contrainteCase.add(model.and(tmp.toArray(new Constraint[]{})));
+					ContraintesT=model.and(tmp.toArray(new Constraint[]{}));
+					//model.and(tmp.toArray(new Constraint[]{})).post();
 				}
 				
 				
@@ -116,11 +118,11 @@ public class Echec {
 				for (int k=-this.max(i,j); k<this.n-this.min(i,j);k++){
 					ligne=i+k;
 					colonne=j+k;
-					System.out.print(k);
-					System.out.print("("+ligne+","+colonne+") \n");
+					//System.out.print(k);
+					//System.out.print("("+ligne+","+colonne+") \n");
 					if (((0<=ligne) && (ligne<this.n)) && ((0<=colonne) && (colonne<this.n))){
 						if ((ligne!=i) || (colonne!=j)){
-							System.out.print(" Position : " +"("+ligne+","+colonne+") \n");
+							//System.out.print(" Position : " +"("+ligne+","+colonne+") \n");
 							tmp1.add(model.and(contrainteF,model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f)));
 							//ContraintesF.add(tmp);
 							//model.arithm(echequier[ligne][colonne], ">", this.t+this.c+this.f).post();
@@ -129,11 +131,11 @@ public class Echec {
 					}
 				}
 				if( !tmp1.isEmpty()){
-					System.out.print("Size Tmp1 :"+tmp1.size());
+					//System.out.print("Size Tmp1 :"+tmp1.size());
 					tmp.add(model.and(tmp1.toArray(new Constraint[]{})));
 					
 				}
-				System.out.print("Size Tmp :"+tmp.size());
+				//System.out.print("Size Tmp :"+tmp.size());
 				
 				//diagonale droite vers la gauche
 				ligne=0;
@@ -150,15 +152,15 @@ public class Echec {
 					}
 				}
 				if( !tmp2.isEmpty()){
-					System.out.print("Size Tmp2 :"+tmp2.size());
+					//System.out.print("Size Tmp2 :"+tmp2.size());
 					tmp.add(model.and(tmp2.toArray(new Constraint[]{})));
 				}
 				//System.out.print(i+ " "+ j+ "\n");
-				System.out.print("Size Tmp :"+tmp.size());
+				//System.out.print("Size Tmp :"+tmp.size());
 				//Constraint test=model.and(tmp.toArray(new Constraint[]{}));
 				if( !tmp.isEmpty()){
 					//model.and(tmp.toArray(new Constraint[]{}));
-					contrainteCase.add(model.and(tmp.toArray(new Constraint[]{})));
+					ContraintesF=model.and(tmp.toArray(new Constraint[]{}));
 				}
 				//ContraintesF.add(model.and(tmp.toArray(new Constraint[]{})));
 				//ContraintesF.add(test);
@@ -216,26 +218,33 @@ public class Echec {
 				}
 				
 				if (!tmp.isEmpty()){
-					contrainteCase.add(model.and(tmp.toArray(new Constraint[]{})));
+					ContraintesC=model.and(tmp.toArray(new Constraint[]{}));
 				}//model.eva
 				
 				//model.or(contrainteCase.toArray(new Constraint[]{})).post();
 				
-				contrainteCase.clear();
+				//ALLContraintes.add(model.and(ContraintesT,ContraintesC,ContraintesF));
+				//model.and(ContraintesT,ContraintesC,ContraintesF)
+				//ContraintesT.post();
+				//model.or(ContraintesT,ContraintesC,ContraintesF);
+				//ContraintesC.post();
+				//ContraintesF.post();
+				
+				ALLContraintes.add(model.or(ContraintesT,ContraintesC,ContraintesF));
+				//ALLContraintes.add(model.or(ContraintesC.toArray(new Constraint[]{})));
+				//contrainteCase.clear();
 			}
 			
 		}
 		//Constraint allUnique=model.and(ContraintesUnique.toArray(new Constraint[]{})); 
-		/*Constraint allTour=model.or(ContraintesT.toArray(new Constraint[]{}));
-		Constraint allFou=model.or(ContraintesF.toArray(new Constraint[]{}));
-		Constraint allCavalier=model.or(ContraintesC.toArray(new Constraint[]{}));*/
 		//Constraint allTour=model.or(ContraintesT.toArray(new Constraint[]{}));
 		//Constraint allFou=model.or(ContraintesF.toArray(new Constraint[]{}));
 		//Constraint allCavalier=model.or(ContraintesC.toArray(new Constraint[]{}));
 		//model.and(allUnique).post();
-		//model.and(allUnique,allTour,allFou,allCavalier).post();
+		//model.or(contrainteCase.toArray(new Constraint[]{})).post();
+		model.or(ALLContraintes.toArray(new Constraint[]{})).post();
 		//Constraint res=model.or(ALLContraintes.toArray(new Constraint[]{}));
-		//model.and(res,allUnique).post();
+		//model.and(res).post();
 		//model.and(allFou).post();
 		
 		//model.and(ContraintesUnique.toArray(new Constraint[]{})).post();
