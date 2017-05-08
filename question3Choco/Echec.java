@@ -64,6 +64,7 @@ public class Echec {
 		ArrayList<Constraint> ContrainteF=new ArrayList<Constraint>();
 		ArrayList<Constraint> ContrainteC=new ArrayList<Constraint>();
 		ArrayList<Constraint> ALLContraintes= new ArrayList<Constraint>();
+		ArrayList<Constraint> ALLColonnes= new ArrayList<Constraint>();
 		for (int i=0;i<this.n;i++){
 			for (int j=0;j<this.n;j++){
 				System.out.print("\nPosition"+ i+ " "+ j+ "\n");
@@ -77,7 +78,7 @@ public class Echec {
 						}
 					}
 				}
-		
+			
 				//contrainte Tour
 				Constraint c1= model.arithm(echequier[i][j], ">=", 1);
 				Constraint c2= model.arithm(echequier[i][j], "<=", this.t);
@@ -102,8 +103,7 @@ public class Echec {
 				}
 				
 				ALLContraintes.add(model.and(ContrainteT.toArray(new Constraint[]{})));
-				
-				
+				//model.or(model.and(ContrainteT.toArray(new Constraint[]{}))).post();
 				//contrainte fou
 				Constraint c3= model.arithm(echequier[i][j], ">=", this.t+1);
 				Constraint c4= model.arithm(echequier[i][j], "<=", this.t+this.f);
@@ -143,7 +143,7 @@ public class Echec {
 					}
 				}
 				ALLContraintes.add(model.and(ContrainteF.toArray(new Constraint[]{})));
-				
+				//model.or(model.and(ContrainteF.toArray(new Constraint[]{}))).post();
 				//Contrainte Cavalier
 				ContrainteC.clear();
 				Constraint c5= model.arithm(echequier[i][j], ">=", this.t+this.f+1);
@@ -193,22 +193,34 @@ public class Echec {
 					ContrainteC.add(contrainte);
 					
 				}
+				
 				ALLContraintes.add(model.and(ContrainteC.toArray(new Constraint[]{})));
 				
+				//model.or(ALLContraintes.toArray(new Constraint[]{})).post();
+				//ALLContraintes.clear();
+				ALLColonnes.add(model.or(ALLContraintes.toArray(new Constraint[]{})));
+				ALLContraintes.clear();
 				
 			}
 			
+			model.or(ALLColonnes.toArray(new Constraint[]{})).post();
+			ALLColonnes.clear();
+			model.and(ContraintesUnique.toArray(new Constraint[]{})).post();
+			ContraintesUnique.clear();
 		}
-		Constraint allUnique=model.and(ContraintesUnique.toArray(new Constraint[]{}));
-		//model.and(allUnique).post();
+		
+		//Constraint allUnique=model.and(ContraintesUnique.toArray(new Constraint[]{}));
+		//allUnique.post();
 		//model.or(ALLContraintes.toArray(new Constraint[]{})).post();
-		Constraint t=model.or(ALLContraintes.toArray(new Constraint[]{}));
-		model.and(allUnique,t).post();
+		//Constraint t=model.or(ALLContraintes.toArray(new Constraint[]{}));
+		//model.and(allUnique,t).post();
+		
 		
 		Solver solver = model.getSolver();
 		if(solver.solve()){
 		    this.printingBoard(echequier);
 			this.printNumber(echequier);
+			System.out.print(ALLContraintes);
 		}else {
 		    System.out.println("The solver has proved the problem has no solution");
 		}
