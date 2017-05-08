@@ -74,7 +74,7 @@ L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
 $ D = \{Vide, tour, fous, cavalier \} $ $D_i$ étant le domaine de la variable $x_{i,j}$\\
 
 
-\textbf{Contraintes:}\\
+\textbf{Contraintes tours:}\\
 %$ c = (\{x_{i,j} \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ au moins un pions qui menace $x_{i,j} )$
 %$ x_{i,j} = V \land $ \\
 $ c_T = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)), \{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l, (1 \leq l \leq n) \exists b_{l,j} = T \lor b_{i,j} = V, \forall k (1 \leq k \leq n), \exists b_{i,k} = T\})  $  \\
@@ -83,6 +83,18 @@ $ c_{couple,T} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} 
 \textbf{Autre possibilité}\\
 $ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \}$\\
 $ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \}$
+
+\textbf{Contraintes fous:}\\
+$ c_F = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)), \{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l,k (1 \leq l \leq n).(1 \leq k \leq n) \exists b_{l,k} = F \lor b_{i,j} = V, \forall l,k (1 \leq l \leq n).(n \leq k \leq 1), \exists b_{l,k} = F\})  $  \\
+$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \}$\\
+$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \}$
+
+\textbf{Contraintes cavaliers:}\\
+$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}), \{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in [+1,+2,-1,-2], \exists b_{i,j} = C\}) $
+
+\textbf{Contrainte finale:}\\
+$ C = (C_T \land c_{couple,T_{colonnes}} \land c_{couple,T_{lignes}}) \lor (c_F \land c_{couple,F_{diag1}} \land c_{couple,F_{diag2}}) \lor c_{C,(i,j)}$
+
 
 \section{Question 3}
 
