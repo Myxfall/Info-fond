@@ -92,6 +92,9 @@ $ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, 
 \textbf{Contraintes cavaliers:}\\
 $ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}), \{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in [+1,+2,-1,-2], \exists b_{i,j} = C\}) $
 
+\textbf{Contrainte finale:}\\
+$ C = (C_T \land c_{couple,T_{colonnes}} \land c_{couple,T_{lignes}}) \lor (c_F \land c_{couple,F_{diag1}} \land c_{couple,F_{diag2}}) \lor c_{C,(i,j)}$
+
 
 \section{Question 3}
 

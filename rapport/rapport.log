@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.4.9)  8 MAY 2017 18:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.4.9)  8 MAY 2017 18:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -740,15 +740,15 @@ Overfull \hbox (24.8977pt too wide) in paragraph at lines 92--94
 /10 j\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 =
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 104.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 107.
 [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 104.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 107.
  (./rapport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 104.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 104.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 107.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 107.
 Package rerunfilecheck Info: File `rapport.out' has not changed.
 (rerunfilecheck)             Checksum: 61A9C4AC80B4B518C78C3D69A96E32FF;321.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 104.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 107.
  ) 
 Here is how much of TeX's memory you used:
  9109 strings out of 493089
@@ -772,7 +772,7 @@ live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
 e/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/texlive
 /2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/
 2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on rapport.pdf (3 pages, 158786 bytes).
+Output written on rapport.pdf (3 pages, 159233 bytes).
 PDF statistics:
  118 PDF objects out of 1000 (max. 8388607)
  98 compressed objects within 1 object stream
