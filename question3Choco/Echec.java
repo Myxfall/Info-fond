@@ -16,10 +16,10 @@ public class Echec {
 	
 	
 	public Echec(int n,int t, int f, int c){
-		this.n=n;
-		this.t=t;
-		this.f=f;
-		this.c=c;
+		this.n=3;
+		this.t=2;
+		this.f=1;
+		this.c=1;
 		
 		
 	}
@@ -264,7 +264,8 @@ public class Echec {
 				//contrainte Tour
 				Constraint c1= model.arithm(echequier[i][j], ">=", this.t+this.f+this.c+1);
 				Constraint c2= model.arithm(echequier[i][j], "<=", this.n*this.n);
-				Constraint contrainteT=model.and(c1,c2);
+				Constraint contrainteV=model.and(c1,c2);
+				
 				Constraint contrainte=null;
 				Constraint contrainte1=null;
 				Constraint contrainte2=null;
@@ -290,27 +291,15 @@ public class Echec {
 						contrainte=model.and(contrainte1, contrainte2);
 						ContrainteT.add(contrainte);
 					}
-					//TODO: contrainte pas de pions entre une tour et une case vide
-					//On pourrait faire une boucle qui examine les case entre une tour et une case vide non compris, si
-					//la case est occupé, alors il faut que ce soit une tour, sinon le problème n'est plus satisfait
-					//Exemple
-					//	T	*	F	*	T 	ligne correcte
-					//	*	*	*	*	*
-					//	*	*	F	*	T	ligne fausse et colonne du faux aussi
-					// 	*	*	*	*	*
-					// 	T	T	*	T	*
-					//Si case vide, alors tour dans son adjacence, si dans adjacence y a un autre pions, il faut que de l'autre coté du pions il y ait une tour
-					//if case[i][j] == V, then \exists tour in adjcence
-					//if case[i+l][j] == pions, then tour \exists in [case[i+l+m][j], case[n][j]]
 				}
 				
 				
-				ALLContraintes.add(model.and(contrainteT,model.or(ContrainteT.toArray(new Constraint[]{}))));
+				ALLContraintes.add(model.or(ContrainteT.toArray(new Constraint[]{})));
 				//model.or(model.and(ContrainteT.toArray(new Constraint[]{}))).post();
 				//contrainte fou
-				Constraint c3= model.arithm(echequier[i][j], ">=", this.t+this.f+this.c+1);
-				Constraint c4= model.arithm(echequier[i][j], "<=", this.n*this.n);
-				Constraint contrainteF=model.and(c3,c4);
+				//Constraint c3= model.arithm(echequier[i][j], ">=", this.t+this.f+this.c+1);
+				//Constraint c4= model.arithm(echequier[i][j], "<=", this.n*this.n);
+				//Constraint contrainteF=model.and(c3,c4);
 				ContrainteF.clear();
 				//ContrainteF.add(contrainteF);
 				contrainte=null;
@@ -356,13 +345,13 @@ public class Echec {
 						}
 					}
 				}
-				ALLContraintes.add(model.and(contrainteF,model.or(ContrainteF.toArray(new Constraint[]{}))));
+				ALLContraintes.add(model.or(ContrainteF.toArray(new Constraint[]{})));
 				//model.or(model.and(ContrainteF.toArray(new Constraint[]{}))).post();
 				//Contrainte Cavalier
 				
-				Constraint c5= model.arithm(echequier[i][j], ">=", this.t+this.f+this.c+1);
-				Constraint c6= model.arithm(echequier[i][j], "<=", this.n*this.n);
-				Constraint contrainteC=model.and(c5,c6);
+				//Constraint c5= model.arithm(echequier[i][j], ">=", this.t+this.f+this.c+1);
+				//Constraint c6= model.arithm(echequier[i][j], "<=", this.n*this.n);
+				//Constraint contrainteC=model.and(c5,c6);
 				ContrainteC.clear();
 				//ContrainteC.add(contrainteC);
 				System.out.print("\n Debut contrainte Cavalier: \n");
@@ -424,10 +413,10 @@ public class Echec {
 					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
-				
-				ALLContraintes.add(model.and(contrainteC,model.or(ContrainteC.toArray(new Constraint[]{}))));
-				
-				ALLColonnes.add(model.or(ALLContraintes.toArray(new Constraint[]{})));
+				if (!ContrainteC.isEmpty()){
+					ALLContraintes.add(model.or(ContrainteC.toArray(new Constraint[]{})));
+				}
+				ALLColonnes.add(model.and(contrainteV,model.or(ALLContraintes.toArray(new Constraint[]{}))));
 				ALLContraintes.clear();
 				
 			}
