@@ -25,34 +25,33 @@ Le premier objectif de ce projet est de modeliser divers problemes en problemes 
 \section{Question 1}
 L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
 \textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
-\textbf{Domaines : }
-$ D = (vide, fous, cavalier, tour) $
-
-\textbf{Contraintes : }\\
-Contrainte{ Xij si Di=F alors {pour nimporte quel i=j -> xij}}
-Contrainte{ Xij si Di=T alors {pour un i,j -> tout les j xij et tout les i de xij}}
-Contrainte{ Xij si Di=c alors {pour un i,j -> tout les j de xij + tout les i de xin, tout les i de xij + tout les j de xnj}}
-
-$ \{ x_{i,j} \wedge tour \rightarrow x_{i,j} (\forall algo crois) \wedge vide \} $
-
-$\forall x_{i,j} \in D_4 : \exists l=n : (\forall x_{l,j} \in D_1, l \neq j) \wedge (\forall x_{i,l} \in D_1, l \neq i)$
-
-$ c_1 = (\{x_1, x_2\},(b_i, b_j)| b_i = T, b_j = vide \lor b_i = vide, b_j = T) $
-
-\textbf{Contraintes tour}\\
-$ c_{T_{col},j} = ((x_{1,j}, x_{2,j},\ldots, x_{n,j}), \{(b_1, b_2,\ldots, b_n) | b_i = T, b_j = V, \forall j \ne i\})$ pour les colonnes \\
-$ c_{T_{ligne},j} = ((x_{i,1}, x_{i,2},\ldots, x_{i,n}), \{(b_1, b_2,\ldots, b_n) | b_i = T, b_j = V, \forall j \ne i\})$ pour les lignes
-
-\textbf{Contraintes fou}\\
-$ c_{F,2*n-2} = ((x_{1,n-1}, x_{2,n}), \{(b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) \land ((x_{1,2}, x_{2,1}), \{(b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) $ \\
-\vdots \\
-$ c_{F,n+1} = ((x_{1,2}, x_{2,3}, \ldots, x_{n-1,n}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) \land ((x_{1,n-1},x_{2,n-2}, \ldots, x_{n-1,1}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) $ \\
-$ c_{F,n} = ((x_{1,1}, x_{2,2},\ldots, x_{n,n}), \{(b_1, b_2, \ldots, b_n)|b_i = F, b_j = V, \forall j \ne i\}) \land ((x_{1,n}, x_{2,n-1}, \ldots, x_{n, 1}), \{(b_1, b_2, \ldots, b_n)|b_i = F, b_j = V, \forall j \ne i\})$ \\
-$ c_{F,n-1} = ((x_{2,1}, x_{3,2},\ldots, x_{n, n-1}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) \land ((x_{2,n}, x_{3,n-1}, \ldots, x_{n,2}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) $ \\
-\vdots \\
-$ c_{F,2} = ((x_{n-1,1}, x_{n,2}), \{(b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) \land ((x_{n-1,n}, x_{n,n-1}), \{(b_1, b_2)|b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) $
+\textbf{Domaines : } $ D = \{vide, fous, cavalier, tour\} $\\
+\textbf{Contraintes : } Pour chacune des pièces de l'echequier, si une case est occupé par un pions, alors dans la porté de ce pion, donc les cases attaquables par ce pion, doivent être obligatoirement vide.  On parcours donc chaque case, et lorsque qu'une case est occupé, en fonction du pion qui occupe cette case, les contraintes changent.
 
 
+\subsection{Contraintes tour}
+	Pour chaque colonne de l'echequier, si une case de cette colonne est occupée par une tour, alors le reste des cases de cette colonne doivent être vide:
+$$ c_{T_{col},j} = ((x_{1,j}, x_{2,j},\ldots, x_{n,j}), \{(b_1, b_2,\ldots, b_n) | b_i = T, b_j = V, \forall j \ne i\})$$
+	Pour chaque ligne de l'echequier, si une case de cette ligne est occupée par une tour, alors le reste des cases de cette ligne doivent être vide:
+$$ c_{T_{i,ligne}} = ((x_{i,1}, x_{i,2},\ldots, x_{i,n}), \{(b_1, b_2,\ldots, b_n) | b_i = T, b_j = V, \forall j \ne i\})$$
+
+\subsection{Contraintes fou}
+	Les contraintes du fou sont composées dans le même état d'esprit que les contraintes des tours, cepandant la portée d'un fou change, et en fonction de la digonale sur laquelle est placé le fou, la distance maximal que ce fou peut atteindre change.  En effet les plus grand diagonales se trouve en $(0,0)$ et $(0,n-1)$.
+	Par contrainte, on considère toujours la diagonale opposée, et on réunie les deux diagonales par un \emph{and}.
+
+$$ c_{F,2*n-2} = ((x_{1,n-1}, x_{2,n}), \{(b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\})\land$$ $$((x_{1,2}, x_{2,1}), \{(b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) $$ 
+{\centering
+  \vdots\par
+}
+$$ c_{F,n+1} = ((x_{1,2}, x_{2,3}, \ldots, x_{n-1,n}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) \land$$ $$((x_{1,n-1},x_{2,n-2}, \ldots, x_{n-1,1}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) $$
+$$ c_{F,n} = ((x_{1,1}, x_{2,2},\ldots, x_{n,n}), \{(b_1, b_2, \ldots, b_n)|b_i = F, b_j = V, \forall j \ne i\}) \land$$ $$((x_{1,n}, x_{2,n-1}, \ldots, x_{n, 1}), \{(b_1, b_2, \ldots, b_n)|b_i = F, b_j = V, \forall j \ne i\})$$
+$$ c_{F,n-1} = ((x_{2,1}, x_{3,2},\ldots, x_{n, n-1}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) \land$$ $$((x_{2,n}, x_{3,n-1}, \ldots, x_{n,2}), \{(b_1, b_2, \ldots, b_{n-1})|b_i = F, b_j = V, \forall j \ne i\}) $$
+{\centering
+  \vdots\par
+}
+$$ c_{F,2} = ((x_{n-1,1}, x_{n,2}), \{(b_1, b_2)| b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) \land$$ $$((x_{n-1,n}, x_{n,n-1}), \{(b_1, b_2)|b_1 = F, b_2 = V \lor b_1 = V, b_2 = F\}) $$
+
+	Les diagonales de gauche à droite sont représenté par la matrice ci-dessous.
 \begin{equation}
 \left( \begin{array}{ccccc}
 c_{F,n} & c_{F,n+1} & \dots & c_{F,2*n-2} & \hfill \\
@@ -63,37 +62,40 @@ c_{F,2}& \vdots & c_{F,n-1}& c_{F,n} &c_{F,n+1} \\
 \end{array} \right)
 \end{equation}
 
-\textbf{Contraintes cavalier:}\\
-$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}), \{(b_1, b_2, \ldots, b_9)|b_1 = C, b_2, \ldots b_9 = V\}) $
+\subsection{Contraintes cavalier:}
+	Les contraintes des cavaliers sont plus simple. En effet si on rencontre une case occupée par un cavalier, alors il n'y a que 8 contraintes pour les 8 cases que le cavalier peut atteindre.  Si le cavalier est en $(i,j)$, alors il ne peut qu'attaquer les cases où $i+e,j+e, e \in [+1,-1,+2,-2]$
+$$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}),$$ $$\{(b_1, b_2, \ldots, b_9)|b_1 = C, b_2, \ldots b_9 = V\}) $$
 
 
 \section{Question 2}
 L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
 \textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
 \textbf{Domaines : }
-$ D = \{Vide, tour, fous, cavalier \} $ $D_i$ étant le domaine de la variable $x_{i,j}$\\
+$ D = \{Vide, tour, fous, cavalier \} $\\
+\textbf{Contraintes : } Pour chacune des pièces de l'echequier, si une case est vide, alors il existe au moins un pion qui menace cette case vide
 
+\subsection{Contraintes tours}
+	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins une tour dans la ligne ou la colonne de la case non occupée.
+$$ c_T = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l, (1 \leq l \leq n) \exists b_{l,j} = T \lor b_{i,j} = V, \forall k (1 \leq k \leq n), \exists b_{i,k} = T\})  $$
+	Nous devons aussi indiqué qu'il n'y pas d'autre pion entre la case vide et la tour.  On indique donc que les cases entre la case vide et la case occupé par une tour, doivent non occupées. Nous avons donc une telle contrainte pour la ligne et la colonne de la case vide menacé par une tour.
+%$$ c_{couple,T} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \} \lor$$ $$b_{i,j} = T, b_{l,k} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V) $$
+$$ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \}$$
+$$ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \}$$
 
-\textbf{Contraintes tours:}\\
-%$ c = (\{x_{i,j} \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ au moins un pions qui menace $x_{i,j} )$
-%$ x_{i,j} = V \land $ \\
-$ c_T = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)), \{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l, (1 \leq l \leq n) \exists b_{l,j} = T \lor b_{i,j} = V, \forall k (1 \leq k \leq n), \exists b_{i,k} = T\})  $  \\
-$ c_{couple,T} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \} \lor b_{i,j} = T, b_{l,k} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V) $\\
+\subsection{Contraintes fous}
+	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un fou dans les deux diagonales de la case vide.
+$$ c_F = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j},\forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l,k (1 \leq l \leq n).(1 \leq k \leq n) \exists b_{l,k} = F \lor$$ $$b_{i,j} = V, \forall l,k (1 \leq l \leq n).(n \leq k \leq 1), \exists b_{l,k} = F\})  $$
+	De nouveau nous devons nous assurer qu'il n'y a pas d'autre pions qui gène le fou entre la case vide et ce fou.
+$$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \}$$
+$$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \}$$
 
-\textbf{Autre possibilité}\\
-$ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \}$\\
-$ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \}$
+\subsection{Contraintes cavaliers:}
+		Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un cavalier qui menace la case vide. Pour cela il suffit de verifier qu'il existe une case dans les 8 cases correspondant à l'ensemble des mouvements du cavalier ($[+1,-1,+2,-2]$), soit occupé par un cavalier.
+$$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}),$$ $$\{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in [+1,+2,-1,-2], \exists b_{i,j} = C\}) $$
 
-\textbf{Contraintes fous:}\\
-$ c_F = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)), \{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l,k (1 \leq l \leq n).(1 \leq k \leq n) \exists b_{l,k} = F \lor b_{i,j} = V, \forall l,k (1 \leq l \leq n).(n \leq k \leq 1), \exists b_{l,k} = F\})  $  \\
-$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \}$\\
-$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \}$
-
-\textbf{Contraintes cavaliers:}\\
-$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}), \{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in [+1,+2,-1,-2], \exists b_{i,j} = C\}) $
-
-\textbf{Contrainte finale:}\\
-$ C = (C_T \land c_{couple,T_{colonnes}} \land c_{couple,T_{lignes}}) \lor (c_F \land c_{couple,F_{diag1}} \land c_{couple,F_{diag2}}) \lor c_{C,(i,j)}$
+\subsection{Contrainte finale:}
+	Finalement il n'y a qu'une seule grande contrainte à appliquer à notre problème. Etant donné qu'il suffit qu'un seule pion menace une case vide, nous pouvons relier nos contrainte par des conditions \emph{or}. 
+$$ C = (C_T \land c_{couple,T_{colonnes}} \land c_{couple,T_{lignes}}) \lor (c_F \land c_{couple,F_{diag1}} \land c_{couple,F_{diag2}}) \lor c_{C,(i,j)}$$
 
 
 \section{Question 3}
