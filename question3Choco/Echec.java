@@ -16,10 +16,10 @@ public class Echec {
 	
 	
 	public Echec(int n,int t, int f, int c){
-		this.n=n;
-		this.t=t;
-		this.f=f;
-		this.c=c;
+		this.n=4;
+		this.t=2;
+		this.f=1;
+		this.c=2;
 		
 		
 	}
@@ -238,8 +238,8 @@ public class Echec {
 		
 	}
 	public void domination(){
-		Model model = new Model("-independance problem");
-		IntVar[][] echequier =model.intVarMatrix("echequier",this.n,this.n,1,this.n*this.n); //0 vide 1 fou 2 cavalier 4 tour
+		Model model = new Model("-domination problem");
+		IntVar[][] echequier =model.intVarMatrix("echequier",this.n,this.n,1,this.n*this.n); 
 
 		ArrayList<Constraint> ContraintesUnique= new ArrayList<Constraint>();
 		ArrayList<Constraint> ContrainteT=new ArrayList<Constraint>();
@@ -271,7 +271,7 @@ public class Echec {
 				Constraint contrainte2=null;
 				ContrainteT.clear();
 				//ContrainteT.add(contrainteT);
-				System.out.print("\n Debut contrainte Tour: \n");
+				System.out.print("\n Debut contrainte Vide: \n");
 				for (int l=0;l<this.n;l++){
 					if (j!=l){
 						System.out.print("\n Emplacement vide Ligne: ("+i+","+l+") \n");
