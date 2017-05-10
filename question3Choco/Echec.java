@@ -16,10 +16,10 @@ public class Echec {
 	
 	
 	public Echec(int n,int t, int f, int c){
-		this.n=3;
+		this.n=4;
 		this.t=2;
 		this.f=1;
-		this.c=1;
+		this.c=2;
 		
 		
 	}
