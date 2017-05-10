@@ -266,24 +266,44 @@ public class Echec {
 				Constraint c2= model.arithm(echequier[i][j], "<=", this.n*this.n);
 				Constraint contrainteT=model.and(c1,c2);
 				Constraint contrainte=null;
+				Constraint contrainte1=null;
+				Constraint contrainte2=null;
 				ContrainteT.clear();
 				//ContrainteT.add(contrainteT);
 				System.out.print("\n Debut contrainte Tour: \n");
 				for (int l=0;l<this.n;l++){
 					if (j!=l){
 						System.out.print("\n Emplacement vide Ligne: ("+i+","+l+") \n");
-						contrainte= model.arithm(echequier[i][l], "<=", this.t+this.c+this.f); //vide ligne
+						//contrainte= model.arithm(echequier[i][l], "<=", this.t+this.c+this.f); //vide ligne
+						//Correction en this.t
+						contrainte1=model.arithm(echequier[i][l], "<=", this.t);
+						contrainte2=model.arithm(echequier[i][l], ">=", 1);
+						contrainte=model.and(contrainte1, contrainte2);
 						ContrainteT.add(contrainte);
-						
-						
-						
 					}
 					if(i!=l){
 						System.out.print("\n Emplacement vide Ligne: ("+l+","+j+") \n");
-						contrainte=model.arithm(echequier[l][j], "<=", this.t+this.c+this.f); //vide colonne
+						//contrainte=model.arithm(echequier[l][j], "<=", this.t+this.c+this.f); //vide colonne
+						//Correction en this.t
+						contrainte1=model.arithm(echequier[i][l], "<=", this.t);
+						contrainte2=model.arithm(echequier[i][l], ">=", 1);
+						contrainte=model.and(contrainte1, contrainte2);
 						ContrainteT.add(contrainte);
 					}
+					//TODO: contrainte pas de pions entre une tour et une case vide
+					//On pourrait faire une boucle qui examine les case entre une tour et une case vide non compris, si
+					//la case est occupé, alors il faut que ce soit une tour, sinon le problème n'est plus satisfait
+					//Exemple
+					//	T	*	F	*	T 	ligne correcte
+					//	*	*	*	*	*
+					//	*	*	F	*	T	ligne fausse et colonne du faux aussi
+					// 	*	*	*	*	*
+					// 	T	T	*	T	*
+					//Si case vide, alors tour dans son adjacence, si dans adjacence y a un autre pions, il faut que de l'autre coté du pions il y ait une tour
+					//if case[i][j] == V, then \exists tour in adjcence
+					//if case[i+l][j] == pions, then tour \exists in [case[i+l+m][j], case[n][j]]
 				}
+				
 				
 				ALLContraintes.add(model.and(contrainteT,model.or(ContrainteT.toArray(new Constraint[]{}))));
 				//model.or(model.and(ContrainteT.toArray(new Constraint[]{}))).post();
@@ -294,6 +314,8 @@ public class Echec {
 				ContrainteF.clear();
 				//ContrainteF.add(contrainteF);
 				contrainte=null;
+				contrainte1 = null;
+				contrainte2 = null;
 
 				 //diagonale gauche vers la droite
 				int ligne=0;
@@ -305,7 +327,11 @@ public class Echec {
 					if (((0<=ligne) && (ligne<this.n)) && ((0<=colonne) && (colonne<this.n))){
 						if ((ligne!=i) || (colonne!=j)){
 							System.out.print("\n Emplacement vide G-D: ("+ligne+","+colonne+") \n");
-							contrainte=model.arithm(echequier[ligne][colonne], "<=", this.t+this.c+this.f);
+							//contrainte=model.arithm(echequier[ligne][colonne], "<=", this.t+this.c+this.f);
+							//Correction en this.t+this.f
+							contrainte1=model.arithm(echequier[ligne][colonne], "<=", this.t+this.f);
+							contrainte2 = model.arithm(echequier[ligne][colonne], ">=", this.t+1);
+							contrainte = model.and(contrainte1, contrainte2);
 							ContrainteF.add(contrainte);
 						}
 					}
@@ -321,7 +347,11 @@ public class Echec {
 					if (((0<=ligne) && (ligne<this.n)) && ((0<=colonne) && (colonne<this.n))){
 						if ((ligne!=i) || (colonne!=j)){
 							System.out.print("\n Emplacement vide D-G: ("+ligne+","+colonne+") \n");
-							contrainte=model.arithm(echequier[ligne][colonne], "<=", this.t+this.c+this.f);
+							//contrainte=model.arithm(echequier[ligne][colonne], "<=", this.t+this.c+this.f);
+							//Correction en this.t+this.f
+							contrainte1=model.arithm(echequier[ligne][colonne], "<=", this.t+this.f);
+							contrainte2 = model.arithm(echequier[ligne][colonne], ">=", this.t+1);
+							contrainte = model.and(contrainte1, contrainte2);
 							ContrainteF.add(contrainte);
 						}
 					}
@@ -338,46 +368,61 @@ public class Echec {
 				System.out.print("\n Debut contrainte Cavalier: \n");
 				if ((i+1<this.n) && (j+2<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+1)+","+(j+2)+") \n");
-					contrainte=model.arithm(echequier[i+1][j+2], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i+1][j+2], "<=", this.t+this.c+this.f);
+					contrainte2 = model.arithm(echequier[i+1][j+2], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 					
 				}
 				if ((i+1<this.n) && (j-2>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+1)+","+(j-2)+") \n");
-					contrainte=model.arithm(echequier[i+1][j-2], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i+1][j-2], "<=", this.t+this.c+this.f);
+					contrainte2 = model.arithm(echequier[i+1][j-2], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
 				if ((i-1>=0) && (j+2<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-1)+","+(j+2)+") \n");
-					contrainte=model.arithm(echequier[i-1][j+2], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i-1][j+2], "<=", this.t+this.c+this.f);
+					contrainte2 = model.arithm(echequier[i-1][j+2], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
 				if ((i-1>=0) && (j-2>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-1)+","+(j-2)+") \n");
-					contrainte=model.arithm(echequier[i-1][j-2], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i-1][j-2], "<=", this.t+this.c+this.f);
+					contrainte2 = model.arithm(echequier[i-1][j-2], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
 				if ((i+2<this.n) && (j+1<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+2)+","+(j+1)+") \n");
-					contrainte=model.arithm(echequier[i+2][j+1], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i+2][j+1], "<=", this.t+this.c+this.f);
+					contrainte2=model.arithm(echequier[i+2][j+1], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 					
 				}
 				if ((i+2<this.n) && (j-1>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+2)+","+(j-1)+") \n");
-					contrainte=model.arithm(echequier[i+2][j-1], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i+2][j-1], "<=", this.t+this.c+this.f);
+					contrainte2=model.arithm(echequier[i+2][j-1], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
 				if ((i-2>=0) && (j+1<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-2)+","+(j+1)+") \n");
-					contrainte=model.arithm(echequier[i-2][j+1], "<=", this.t+this.c+this.f);
+					contrainte1=model.arithm(echequier[i-2][j+1], "<=", this.t+this.c+this.f);
+					contrainte2=model.arithm(echequier[i-2][j+1], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
 				if ((i-2>=0) && (j-1>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-2)+","+(j-1)+") \n");
 					contrainte=model.arithm(echequier[i-2][j-1], "<=", this.t+this.c+this.f);
+					contrainte=model.arithm(echequier[i-2][j-1], ">=", this.t+this.f+1);
+					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
-					
 				}
 				
 				ALLContraintes.add(model.and(contrainteC,model.or(ContrainteC.toArray(new Constraint[]{}))));
