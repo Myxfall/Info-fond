@@ -16,10 +16,10 @@ public class Echec {
 	
 	
 	public Echec(int n,int t, int f, int c){
-		this.n=4;
+		this.n=3;
 		this.t=2;
 		this.f=1;
-		this.c=2;
+		this.c=1;
 		
 		
 	}
@@ -427,7 +427,7 @@ public class Echec {
 					//ALLContraintes.add(model.or(ContrainteC.toArray(new Constraint[]{})));
 				//}
 				
-				ALLColonnes.add(model.or(contrainteV,model.or(ALLContraintes.toArray(new Constraint[]{}))));
+				ALLColonnes.add(model.and(contrainteV,model.or(ALLContraintes.toArray(new Constraint[]{}))));
 				ALLContraintes.clear();
 				
 			}
