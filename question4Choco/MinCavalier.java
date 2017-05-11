@@ -61,75 +61,82 @@ public class MinCavalier {
 						}
 					}
 				}
-				Constraint c1= model.arithm(echequier[i][j], ">", numCavalier);
-				//ALLContraintes.add(c1);
+				Constraint c1= model.arithm(echequier[i][j], ">", numCavalier); //vide
+				//ContrainteC.add(c1);
 				Constraint contrainte=null;
 				System.out.print("\n Debut contrainte Cavalier: \n");
 				if ((i+1<this.n) && (j+2<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+1)+","+(j+2)+") \n");
-					contrainte=model.arithm(echequier[i+1][j+2], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i+1][j+2], "<=", numCavalier); //cavalier
+					 ContrainteC.add(contrainte);
 					
 				}
 				if ((i+1<this.n) && (j-2>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+1)+","+(j-2)+") \n");
-					contrainte=model.arithm(echequier[i+1][j-2], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i+1][j-2], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 				}
 				if ((i-1>=0) && (j+2<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-1)+","+(j+2)+") \n");
-					contrainte=model.arithm(echequier[i-1][j+2], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i-1][j+2], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 				}
 				if ((i-1>=0) && (j-2>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-1)+","+(j-2)+") \n");
-					contrainte=model.arithm(echequier[i-1][j-2], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i-1][j-2], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 				}
 				if ((i+2<this.n) && (j+1<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+2)+","+(j+1)+") \n");
-					contrainte=model.arithm(echequier[i+2][j+1], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i+2][j+1], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 					
 				}
 				if ((i+2<this.n) && (j-1>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i+2)+","+(j-1)+") \n");
-					contrainte=model.arithm(echequier[i+2][j-1], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i+2][j-1], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 				}
 				if ((i-2>=0) && (j+1<this.n)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-2)+","+(j+1)+") \n");
-					contrainte=model.arithm(echequier[i-2][j+1], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i-2][j+1], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 				}
 				if ((i-2>=0) && (j-1>=0)){
 					System.out.print("\n Emplacement Chevalier: ("+(i-2)+","+(j-1)+") \n");
-					contrainte=model.arithm(echequier[i-2][j-1], "<", numCavalier);
-					 ALLContraintes.add(contrainte);
+					contrainte=model.arithm(echequier[i-2][j-1], "<=", numCavalier);
+					ContrainteC.add(contrainte);
 					
 				}
+				Constraint c2=model.and(c1,model.or(ContrainteC.toArray(new Constraint[]{})));
+				ContrainteC.clear();
+				ALLContraintes.add(c2); //(ContrainteC.toArray(new Constraint[]{})));
 				
-				//ALLContraintes.add(model.and(ContrainteC.toArray(new Constraint[]{})));
 				
-				ALLColonnes.add(model.and(c1,model.or(ALLContraintes.toArray(new Constraint[]{}))));
+				
+				
+				//ALLColonnes.add(model.or(c1,model.and(ContrainteC.toArray(new Constraint[]{}))));
 				//ALLContraintes.clear();
 				
 				
 				
 			}		
-			model.or(ALLColonnes.toArray(new Constraint[]{})).post();
-			ALLColonnes.clear();
+			
+			//en 00 cavalier-> alors les case adjancete doivent etre vide -> and and
+			//01 cavalier-> alors les case adjacente doivent etre vide->
+			//and cases vide pour trouver cavalier
 			
 			
 		}
-		//model.or(ALLContraintes.toArray(new Constraint[]{})).post();
+		model.setObjective(Model.MINIMIZE, numCavalier);
+		model.or(ALLContraintes.toArray(new Constraint[]{})).post();
 		model.and(ContraintesUnique.toArray(new Constraint[]{})).post();
 		ContraintesUnique.clear();
-		model.setObjective(Model.MINIMIZE, numCavalier);
 		Solver solver = model.getSolver();
 		if(solver.solve()){
 			this.printingBoard(echequier,numCavalier);
 			this.printNumber(echequier);
+			System.out.print(numCavalier);
 		}else {
 		    System.out.println("The solver has proved the problem has no solution");
 		}
