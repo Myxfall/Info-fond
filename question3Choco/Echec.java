@@ -16,10 +16,10 @@ public class Echec {
 	
 	
 	public Echec(int n,int t, int f, int c){
-		this.n=4;
-		this.t=2;
-		this.f=1;
-		this.c=2;
+		this.n=n;
+		this.t=t;
+		this.f=f;
+		this.c=c;
 		
 		
 	}
@@ -261,7 +261,7 @@ public class Echec {
 					}
 				}
 			
-				//contrainte Tour
+				//contrainte Vide
 				Constraint c1= model.arithm(echequier[i][j], ">=", this.t+this.f+this.c+1);
 				Constraint c2= model.arithm(echequier[i][j], "<=", this.n*this.n);
 				Constraint contrainteV=model.and(c1,c2);
@@ -280,14 +280,14 @@ public class Echec {
 						contrainte1=model.arithm(echequier[i][l], "<=", this.t);
 						contrainte2=model.arithm(echequier[i][l], ">=", 1);
 						contrainte=model.and(contrainte1, contrainte2);
-						ContrainteT.add(contrainte);
+						ContrainteT.add(model.and(contrainte,contrainteV));
 					}
 					if(i!=l){
 						System.out.print("\n Emplacement vide Ligne: ("+l+","+j+") \n");
 						//contrainte=model.arithm(echequier[l][j], "<=", this.t+this.c+this.f); //vide colonne
 						//Correction en this.t
-						contrainte1=model.arithm(echequier[i][l], "<=", this.t);
-						contrainte2=model.arithm(echequier[i][l], ">=", 1);
+						contrainte1=model.arithm(echequier[l][j], "<=", this.t);
+						contrainte2=model.arithm(echequier[l][j], ">=", 1);
 						contrainte=model.and(contrainte1, contrainte2);
 						ContrainteT.add(contrainte);
 					}
@@ -413,9 +413,10 @@ public class Echec {
 					contrainte = model.and(contrainte1, contrainte2);
 					ContrainteC.add(contrainte);
 				}
-				//if (!ContrainteC.isEmpty()){
-					//ALLContraintes.add(model.or(ContrainteC.toArray(new Constraint[]{})));
-				//}
+				
+				
+				ALLContraintes.add(model.or(ContrainteC.toArray(new Constraint[]{})));
+				//model.or(model.and(contrainteV,model.or(ALLContraintes.toArray(new Constraint[]{})))).post();
 				ALLColonnes.add(model.and(contrainteV,model.or(ALLContraintes.toArray(new Constraint[]{}))));
 				ALLContraintes.clear();
 				
@@ -426,7 +427,6 @@ public class Echec {
 			model.and(ContraintesUnique.toArray(new Constraint[]{})).post();
 			ContraintesUnique.clear();
 		}
-		
 		
 		Solver solver = model.getSolver();
 		if(solver.solve()){

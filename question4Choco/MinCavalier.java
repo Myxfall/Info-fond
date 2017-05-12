@@ -2,6 +2,7 @@ package question4Choco;
 
 import java.util.ArrayList;
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.ResolutionPolicy;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.variables.IntVar;
@@ -108,9 +109,11 @@ public class MinCavalier {
 					ContrainteC.add(contrainte);
 					
 				}
-				Constraint c2=model.and(c1,model.or(ContrainteC.toArray(new Constraint[]{})));
+				//Constraint c2=model.or(c1,model.or(ContrainteC.toArray(new Constraint[]{})));
+				
+				ALLContraintes.add(model.and(c1,model.or(ContrainteC.toArray(new Constraint[]{})))); //(ContrainteC.toArray(new Constraint[]{})));
+				//c2.post();
 				ContrainteC.clear();
-				ALLContraintes.add(c2); //(ContrainteC.toArray(new Constraint[]{})));
 				
 				
 				
@@ -121,6 +124,8 @@ public class MinCavalier {
 				
 				
 			}		
+			//model.or(ALLContraintes.toArray(new Constraint[]{})).post();
+			//ALLContraintes.clear();
 			
 			//en 00 cavalier-> alors les case adjancete doivent etre vide -> and and
 			//01 cavalier-> alors les case adjacente doivent etre vide->
@@ -128,15 +133,17 @@ public class MinCavalier {
 			
 			
 		}
-		model.setObjective(Model.MINIMIZE, numCavalier);
 		model.or(ALLContraintes.toArray(new Constraint[]{})).post();
 		model.and(ContraintesUnique.toArray(new Constraint[]{})).post();
-		ContraintesUnique.clear();
+		model.setObjective(Model.MINIMIZE, numCavalier);
 		Solver solver = model.getSolver();
+		//.findOptimalSolution(ResolutionPolicy.MINIMIZE, numCavalier);
 		if(solver.solve()){
+			//solver.findOptimalSolution(numCavalier, , stop)
 			this.printingBoard(echequier,numCavalier);
 			this.printNumber(echequier);
-			System.out.print(numCavalier);
+			System.out.print(numCavalier.getValue());
+			System.out.print(ALLContraintes);
 		}else {
 		    System.out.println("The solver has proved the problem has no solution");
 		}
