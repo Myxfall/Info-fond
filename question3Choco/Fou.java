@@ -10,7 +10,7 @@ public class Fou extends Piece {
 		super(n,"F",model);
 	}
 	
-	public Constraint indepandance(Piece pieceCible){
+	public Constraint Menace(Piece pieceCible){
 		Model model=this.getModel();
 	    Constraint constraint = model.arithm(this.getCoordColonne().sub(pieceCible.getCoordColonne()).abs().intVar(),"=",this.getCoordLigne().sub(pieceCible.getCoordLigne()).abs().intVar());
 	    return constraint;

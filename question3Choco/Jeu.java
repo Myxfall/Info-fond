@@ -36,22 +36,23 @@ public class Jeu {
 			Cavalier cavalier=new Cavalier(this.n,model);
 			allPiece.add(cavalier);
 		}
-		int caseVide=(this.n*this.n)-(this.t+this.c+this.f);
+		/*int caseVide=(this.n*this.n)-(this.t+this.c+this.f);
 		for (int i=0;i<caseVide;i++){
 			Vide vide=new Vide(this.n,model);
 			allPiece.add(vide);
-		}
-		System.out.print(caseVide);
+		}*/
 		for (int l=0;l<this.n*this.n;l++){
 			for (int k=0;k<this.n*this.n;k++){
 				if (l!=k){
 					Piece pieceAttaque=allPiece.get(l);
 					Piece pieceSubit=allPiece.get(k);
-					if (pieceAttaque.getType()!="V"){
-						System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
-						Constraint attaque= pieceAttaque.indepandance(pieceSubit);
-						attaque.post();
-				}}
+					Constraint unique=pieceAttaque.unique(pieceSubit);
+					unique.post();
+					//if ((pieceAttaque.getType()!="V") && (pieceSubit.getType()!="V"));
+					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
+					Constraint attaque= model.not(pieceAttaque.Menace(pieceSubit));
+					attaque.post();
+				}
 			}
 		}
 		
@@ -59,6 +60,7 @@ public class Jeu {
 		if(solver.solve()){
 		    this.printingBoard(allPiece);
 		}else {
+			this.printingBoard(allPiece);
 		    System.out.println("The solver has proved the problem has no solution");
 		}
 	}
@@ -90,7 +92,7 @@ public class Jeu {
 					Piece pieceSubit=allPiece.get(k);
 					if ((pieceAttaque.getType()!="V") && (pieceSubit.getType()!="V")){
 						System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
-						Constraint attaque= pieceAttaque.estMenace(pieceSubit);
+						Constraint attaque= pieceAttaque.Menace(pieceSubit);
 						attaque.post();
 					}
 				}
@@ -114,6 +116,7 @@ public class Jeu {
 		for (int i=0;i<this.n;i++){
 			for (int j=0;j<this.n;j++){
 				System.out.print(printingBoard[i][j]);
+				printingBoard[i][j]="test";
 			}
 		}
 		

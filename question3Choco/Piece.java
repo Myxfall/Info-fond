@@ -31,5 +31,12 @@ public abstract class Piece {
 	public String getType(){
 		return this.type;
 	}
-	public abstract Constraint indepandance(Piece pieceCible);
+	public abstract Constraint Menace(Piece pieceCible);
+	
+	public Constraint unique(Piece pieceCible){
+		Model model=this.getModel();
+		Constraint memeLigne=model.arithm(this.getCoordLigne(), "!=", pieceCible.getCoordLigne());
+		Constraint memeColonne=model.arithm(this.getCoordColonne(), "!=", pieceCible.getCoordColonne());
+		return model.and(memeLigne,memeColonne);
+	}
 }

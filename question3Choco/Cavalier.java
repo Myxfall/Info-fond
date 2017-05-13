@@ -11,7 +11,7 @@ public class Cavalier extends Piece{
 		super(n,"C",model);
 	}
 	
-	public Constraint indepandance(Piece pieceCible){
+	public Constraint Menace(Piece pieceCible){
 		Model model=this.getModel();
 		ArrayList<Constraint> cavalierAttaque=new ArrayList<Constraint>();
 		

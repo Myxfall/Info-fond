@@ -10,7 +10,7 @@ public class Vide extends Piece{
 		super(n,"V",model);
 	}
 	
-	public Constraint indepandance(Piece pieceCible){
+	public Constraint Menace(Piece pieceCible){
 		Model model=this.getModel();
 	    Constraint contraint=null;
 	    return contraint;
