@@ -15,9 +15,9 @@ public class Jeu {
 	
 	public Jeu(int n,int t, int f, int c){
 		this.n=3;
-		this.t=3;
-		this.f=0;
-		this.c=0;
+		this.t=1;
+		this.f=1;
+		this.c=1;
 		
 		
 	}
@@ -36,22 +36,27 @@ public class Jeu {
 			Cavalier cavalier=new Cavalier(this.n,model);
 			allPiece.add(cavalier);
 		}
-		/*int caseVide=(this.n*this.n)-(this.t+this.c+this.f);
+		int caseVide=(this.n*this.n)-(this.t+this.c+this.f);
 		for (int i=0;i<caseVide;i++){
 			Vide vide=new Vide(this.n,model);
 			allPiece.add(vide);
-		}*/
+		}
 		for (int l=0;l<this.n*this.n;l++){
 			for (int k=0;k<this.n*this.n;k++){
+				System.out.print(l+" et "+k+"\n");
 				if (l!=k){
+					System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 					Piece pieceAttaque=allPiece.get(l);
 					Piece pieceSubit=allPiece.get(k);
+					
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
-					//if ((pieceAttaque.getType()!="V") && (pieceSubit.getType()!="V"));
+					
+					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()!="*")){
 					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
-					Constraint attaque= model.not(pieceAttaque.Menace(pieceSubit));
-					attaque.post();
+						Constraint attaque= model.not(pieceAttaque.Menace(pieceSubit));
+						attaque.post();
+					}
 				}
 			}
 		}
@@ -88,10 +93,15 @@ public class Jeu {
 		for (int l=0;l<this.n*this.n;l++){
 			for (int k=0;k<this.n*this.n;k++){
 				if (l!=k){
+					System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 					Piece pieceAttaque=allPiece.get(l);
 					Piece pieceSubit=allPiece.get(k);
-					if ((pieceAttaque.getType()!="V") && (pieceSubit.getType()!="V")){
-						System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
+					
+					Constraint unique=pieceAttaque.unique(pieceSubit);
+					unique.post();
+					
+					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()!="*")){
+					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
 						Constraint attaque= pieceAttaque.Menace(pieceSubit);
 						attaque.post();
 					}
@@ -110,14 +120,18 @@ public class Jeu {
 	public void printingBoard(ArrayList<Piece> allPiece){
 		String[][] printingBoard=new String[this.n][this.n];
 		for (int i=0;i<allPiece.size();i++){
-			System.out.print(allPiece.get(i).getCoordLigne().getValue()+" ,"+allPiece.get(i).getCoordLigne().getValue()+" ,"+allPiece.get(i).getType());
-			printingBoard[allPiece.get(i).getCoordLigne().getValue()][allPiece.get(i).getCoordLigne().getValue()]="test";
+			//System.out.print(allPiece.get(i).getCoordLigne().getValue()+" ,"+allPiece.get(i).getCoordLigne().getValue()+" ,"+allPiece.get(i).getType());
+			printingBoard[allPiece.get(i).getCoordLigne().getValue()][allPiece.get(i).getCoordColonne().getValue()]=allPiece.get(i).getType();
 		}
+		String line;
 		for (int i=0;i<this.n;i++){
+			line="";
 			for (int j=0;j<this.n;j++){
-				System.out.print(printingBoard[i][j]);
-				printingBoard[i][j]="test";
+					line+=printingBoard[i][j]+" ";
+				
+				//printingBoard[i][j]="test";
 			}
+			System.out.print(line+"\n");
 		}
 		
 	}

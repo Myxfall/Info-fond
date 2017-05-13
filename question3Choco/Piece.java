@@ -37,6 +37,6 @@ public abstract class Piece {
 		Model model=this.getModel();
 		Constraint memeLigne=model.arithm(this.getCoordLigne(), "!=", pieceCible.getCoordLigne());
 		Constraint memeColonne=model.arithm(this.getCoordColonne(), "!=", pieceCible.getCoordColonne());
-		return model.and(memeLigne,memeColonne);
+		return model.or(memeLigne,memeColonne);
 	}
 }

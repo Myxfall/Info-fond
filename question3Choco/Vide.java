@@ -7,7 +7,7 @@ import org.chocosolver.solver.constraints.Constraint;
 public class Vide extends Piece{
 	
 	public Vide(int n,Model model){
-		super(n,"V",model);
+		super(n,"*",model);
 	}
 	
 	public Constraint Menace(Piece pieceCible){
