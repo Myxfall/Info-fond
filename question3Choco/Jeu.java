@@ -15,7 +15,7 @@ public class Jeu {
 	
 	public Jeu(int n,int t, int f, int c){
 		this.n=3;
-		this.t=1;
+		this.t=2;
 		this.f=1;
 		this.c=1;
 		
@@ -100,7 +100,7 @@ public class Jeu {
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
 					
-					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()!="*")){
+					if ((pieceAttaque.getType()=="*") && (pieceSubit.getType()!="*")){
 					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
 						Constraint attaque= pieceAttaque.Menace(pieceSubit);
 						attaque.post();
