@@ -24,7 +24,7 @@ public class Main {
 		int f=Integer.parseInt(cmd.getOptionValue("f"));
 		int c=Integer.parseInt(cmd.getOptionValue("c"));
 		
-		Echec jeu =new Echec(n,t,f,c);
+		Jeu jeu =new Jeu(n,t,f,c);
 		
 		if(cmd.hasOption("-i")) {
 			jeu.independance();
