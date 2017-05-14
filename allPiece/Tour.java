@@ -1,4 +1,4 @@
-package question3Choco;
+package allPiece;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;

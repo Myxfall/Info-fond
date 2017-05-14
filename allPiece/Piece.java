@@ -1,4 +1,4 @@
-package question3Choco;
+package allPiece;
 
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.Model;
