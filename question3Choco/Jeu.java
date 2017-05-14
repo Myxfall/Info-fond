@@ -14,10 +14,10 @@ public class Jeu {
 	private int c;
 	
 	public Jeu(int n,int t, int f, int c){
-		this.n=n;
-		this.t=t;
-		this.f=f;
-		this.c=c;
+		this.n=4;
+		this.t=2;
+		this.f=1;
+		this.c=2;
 		
 		
 	}
@@ -103,13 +103,21 @@ public class Jeu {
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
 					
-					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()=="*")){
+					if ((pieceAttaque.getType()=="*") && (pieceSubit.getType()!="*")){
 						System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 						//System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
-						Constraint attaque= pieceAttaque.Menace(pieceSubit);
+						//Constraint attaque= pieceAttaque.Menace(pieceSubit);;
+						
+						Constraint attaque = pieceSubit.Menace(pieceAttaque);
 						OR_contraintes.add(attaque);
-						//attaque.post();
 					}
+					if ((pieceAttaque.getType()=="T") && (pieceSubit.getType()=="F")){
+						Constraint attaque = model.not(pieceAttaque.Menace(pieceSubit));
+						OR_contraintes.add(attaque);
+					}
+						//OR_contraintes.add(attaque);
+						//attaque.post();
+					
 				}
 			}
 			if(!OR_contraintes.isEmpty()){
