@@ -14,10 +14,10 @@ public class Jeu {
 	private int c;
 	
 	public Jeu(int n,int t, int f, int c){
-		this.n=3;
+		this.n=4;
 		this.t=2;
 		this.f=1;
-		this.c=1;
+		this.c=2;
 		
 		
 	}
@@ -93,16 +93,17 @@ public class Jeu {
 		for (int l=0;l<this.n*this.n;l++){
 			for (int k=0;k<this.n*this.n;k++){
 				if (l!=k){
-					System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
+					//System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 					Piece pieceAttaque=allPiece.get(l);
 					Piece pieceSubit=allPiece.get(k);
 					
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
 					
-					if ((pieceAttaque.getType()=="*") && (pieceSubit.getType()!="*")){
+					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()!="*")){
+						System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
-						Constraint attaque= pieceAttaque.Menace(pieceSubit);
+						Constraint attaque= pieceSubit.Menace(pieceAttaque);
 						attaque.post();
 					}
 				}
