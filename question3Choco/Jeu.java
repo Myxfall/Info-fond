@@ -100,10 +100,10 @@ public class Jeu {
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
 					
-					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()!="*")){
+					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()=="*")){
 						System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
-						Constraint attaque= pieceSubit.Menace(pieceAttaque);
+						Constraint attaque= pieceAttaque.Menace(pieceSubit);
 						attaque.post();
 					}
 				}
