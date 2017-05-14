@@ -14,10 +14,10 @@ public class Jeu {
 	private int c;
 	
 	public Jeu(int n,int t, int f, int c){
-		this.n=4;
-		this.t=2;
-		this.f=1;
-		this.c=2;
+		this.n=n;
+		this.t=t;
+		this.f=f;
+		this.c=c;
 		
 		
 	}
@@ -73,6 +73,8 @@ public class Jeu {
 	public void domination(){
 		Model model=new Model("domination");
 		ArrayList<Piece> allPiece=new ArrayList<Piece>();
+		ArrayList<Constraint> OR_contraintes = new ArrayList<Constraint>();
+
 		for (int i=0;i<this.t;i++){
 			Tour tour=new Tour(this.n,model);
 			allPiece.add(tour);
@@ -96,18 +98,25 @@ public class Jeu {
 					//System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
 					Piece pieceAttaque=allPiece.get(l);
 					Piece pieceSubit=allPiece.get(k);
+
 					
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
 					
 					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()=="*")){
 						System.out.print(allPiece.get(l).getType()+ " et "+allPiece.get(k).getType()+"\n");
-					//	System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
+						//System.out.print(pieceAttaque.getType()+"attaque "+pieceSubit.getType()+"\n");
 						Constraint attaque= pieceAttaque.Menace(pieceSubit);
-						attaque.post();
+						OR_contraintes.add(attaque);
+						//attaque.post();
 					}
 				}
 			}
+			if(!OR_contraintes.isEmpty()){
+				model.or(OR_contraintes.toArray(new Constraint[]{})).post();
+				OR_contraintes.clear();
+			}
+
 		}
 		
 		Solver solver = model.getSolver();
