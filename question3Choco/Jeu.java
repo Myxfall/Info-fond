@@ -14,10 +14,10 @@ public class Jeu {
 	private int c;
 	
 	public Jeu(int n,int t, int f, int c){
-		this.n=4;
+		this.n=3;
 		this.t=2;
 		this.f=1;
-		this.c=2;
+		this.c=1;
 		
 		
 	}
