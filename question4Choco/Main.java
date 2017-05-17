@@ -6,7 +6,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import question3Choco.Echec;
 
 public class Main {
 
