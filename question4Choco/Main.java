@@ -18,11 +18,9 @@ public class Main {
 		
 		int n=Integer.parseInt(cmd.getOptionValue("n"));
 		
-		Tmp jeu =new Tmp(n);
-		//MinCavalier jeu=new MinCavalier(n);
+		MinCavalier jeu =new MinCavalier(n);
 		
 		if(cmd.hasOption("-n")) {
-			//jeu.findMin();
 			jeu.MinimizationCavalier();
 		}
 		else{
