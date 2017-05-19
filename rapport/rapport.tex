@@ -79,15 +79,15 @@ $ D = \{Vide, tour, fous, cavalier \} $\\
 $$ c_T = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l, (1 \leq l \leq n) \exists b_{l,j} = T \lor b_{i,j} = V, \forall k (1 \leq k \leq n), \exists b_{i,k} = T\})  $$
 	Nous devons aussi indiqué qu'il n'y pas d'autre pion entre la case vide et la tour.  On indique donc que les cases entre la case vide et la case occupé par une tour, doivent non occupées. Nous avons donc une telle contrainte pour la ligne et la colonne de la case vide menacé par une tour.
 %$$ c_{couple,T} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \} \lor$$ $$b_{i,j} = T, b_{l,k} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V) $$
-$$ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \}$$
-$$ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \}$$
+$$ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \})$$
+$$ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \})$$
 
 \subsection{Contraintes fous}
 	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un fou dans les deux diagonales de la case vide.
 $$ c_F = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j},\forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l,k (1 \leq l \leq n).(1 \leq k \leq n) \exists b_{l,k} = F \lor$$ $$b_{i,j} = V, \forall l,k (1 \leq l \leq n).(n \leq k \leq 1), \exists b_{l,k} = F\})  $$
 	De nouveau nous devons nous assurer qu'il n'y a pas d'autre pions qui gène le fou entre la case vide et ce fou.
-$$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \}$$
-$$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \}$$
+$$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \})$$
+$$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \})$$
 
 \subsection{Contraintes cavaliers:}
 		Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un cavalier qui menace la case vide. Pour cela il suffit de verifier qu'il existe une case dans les 8 cases correspondant à l'ensemble des mouvements du cavalier ($\{+1,-1,+2,-2\}$), soit occupé par un cavalier.
@@ -124,10 +124,11 @@ $ D = \{Vide, tour, fous, cavalier \} $\\
 	$$ e_{C,(i,j)} = \{(x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}),$$ $$\{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in \{+1,+2,-1,-2\}, \exists b_{i,j} = C\}\} $$
 
 	\subsection{Contrainte finale:}
-		Finalement il n'y a qu'une seule grande contrainte à appliquer à notre problème. Etant donné qu'il suffit qu'un seule pion menace une case vide, nous pouvons relier nos ensemble par des \emph{unions} $\cup$. 
+		Finalement il n'y a qu'une seule grande contrainte à appliquer à notre problème. Etant donné qu'il suffit qu'un seule pion menace une case vide, nous pouvons relier nos ensemble par des \emph{unions} $\cup$ et des \emph{intersections} de contraintes $\cap$. 
 	$$ C = (e_T \cap e_{couple,T_{colonnes}} \cap e_{couple,T_{lignes}}) \cup (e_F \cap e_{couple,F_{diag1}} \cap e_{couple,F_{diag2}}) \cup e_{C,(i,j)}$$
 
 \section{Question 3}
+	\subsection{Fichier main.java}
 
 \section{Question Bonus}
 
