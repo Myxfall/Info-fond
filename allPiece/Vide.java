@@ -11,7 +11,6 @@ public class Vide extends Piece{
 	}
 	
 	public Constraint Menace(Piece pieceCible){
-		Model model=this.getModel();
 	    Constraint contraint=null;
 	    return contraint;
 	}

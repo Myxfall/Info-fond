@@ -118,7 +118,7 @@ public class MinCavalier {
 						this.menace(l,k).post();
 					}
 					else{
-						this.model.arithm(this.echequier[l][k], "=",1).post();;
+						this.model.arithm(this.echequier[l][k], "=",1).post();
 					}
 					this.sum=this.sum.add(this.echequier[l][k]).intVar();
 			}
