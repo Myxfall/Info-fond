@@ -11,6 +11,12 @@ import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.variables.IntVar;
 
+import allPiece.Cavalier;
+import allPiece.Fou;
+import allPiece.Piece;
+import allPiece.Tour;
+import allPiece.Vide;
+
 public class Surveillance {
 	
 	private String[][] grid;
@@ -27,10 +33,9 @@ public class Surveillance {
 		this.filename=filename;
 		this.parseFile();
 		this.model= new Model("MinimisationCavalierDomination");
-		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,4);
+		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,1);
 		this.sum=model.intVar("sum", 0, this.dimensionX*this.dimensionY);
 		this.numCamera = model.intVar("objective", 1, this.dimensionX*this.dimensionY);
-		this.salleMin=  model.intVarMatrix("salleMin",this.dimensionY,this.dimensionX,0,1);
 		
 		
 	}
@@ -131,6 +136,7 @@ public class Surveillance {
 	
 	public Constraint cameraNordSud(IntVar[][] sal,int ligne, int colonne,int Sud,int Nord){
 		ArrayList<Constraint> cameraNordSud=new ArrayList<Constraint>();
+		
 		//System.out.print(ligne +" "+colonne+"\n");
 		for (int k=0;k<this.dimensionY;k++){
 			if (ligne!=k){
@@ -166,12 +172,25 @@ public class Surveillance {
 	}
 	
 	public void minCamera(){
-		int Nord=1;
-		int Sud=2;
-		int Est=3;
-		int Ouest=4;
-		ArrayList<Constraint> OR_contraintes = new ArrayList<Constraint>();
-		ArrayList<Constraint> OR_contraintes_Min = new ArrayList<Constraint>();
+		//ArrayList<Constraint> OR_contraintes = new ArrayList<Constraint>();
+		ArrayList<Camera> allCamera=new ArrayList<Camera>();
+		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
+			CameraNord nord=new CameraNord(this.model,this.dimensionY,this.dimensionX);
+			allCamera.add(nord);
+		}
+		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
+			CameraSud sud=new CameraSud(this.model,this.dimensionY,this.dimensionX);
+			allCamera.add(sud);
+		}
+		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
+			CameraEst est=new CameraEst(this.model,this.dimensionY,this.dimensionX);
+			allCamera.add(est);
+		}
+		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
+			CameraOuest ouest=new CameraOuest(this.model,this.dimensionY,this.dimensionX);
+			allCamera.add(ouest);
+		}
+		
 		for (int l=0;l<this.dimensionY;l++){
 			for (int k=0;k<this.dimensionX;k++){
 				if (this.grid[l][k]!="*"){

@@ -1,44 +1,36 @@
 package question5Choco;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
+import org.chocosolver.solver.variables.IntVar;
 
-public class Camera extends Piece{
+public abstract class Camera{
+	
+	private IntVar coordLigne;
+	private IntVar coordColonne;
+	private Model model;
+	private String type;
 
-    public Camera(int n, Model model, String dir){
-		super(n, dir, model);
+    public Camera(Model model, String type, int dimensionLigne, int dimensionColonne){
+    	this.model=model;
+    	this.type=type;
+    	this.coordLigne=this.model.intVar("coordLigne",0,dimensionLigne-1);
+		this.coordColonne=this.model.intVar("coordColonne",0,dimensionColonne-1);
 	}
-
-    public Constraint surveilleOneCase(Piece cible){
-        Model model=this.getModel();
-        Constraint cameraConstraint = null;
-        switch (this.getSens()) {
-            case "N":
-                if (cible.getCoordLigne().getValue() < this.getCoordLigne().getValue()){
-                    cameraConstraint = model.arithm(this.getCoordColonne(), "=", cible.getCoordColonne());
-                }
-                break;
-            case "S":
-                if (cible.getCoordLigne().getValue() > this.getCoordLigne().getValue()){
-                     cameraConstraint = model.arithm(this.getCoordColonne(), "=", cible.getCoordColonne());
-                }
-                break;
-            case "E":
-                if (cible.getCoordColonne().getValue() > this.getCoordColonne().getValue()){
-                     cameraConstraint = model.arithm(this.getCoordLigne(), "=", cible.getCoordLigne());
-                }
-                break;
-            case "O":
-                if (cible.getCoordColonne().getValue() < this.getCoordColonne().getValue()){
-                     cameraConstraint = model.arithm(this.getCoordLigne(), "=", cible.getCoordLigne());
-                }
-                break;
-        }
-        return cameraConstraint;
+    
+    public abstract Constraint surveille(Camera camera);
+    
+    public IntVar getCoordLigne(){
+    	return this.coordLigne;
     }
-
-	@Override
-	public Constraint Menace(Piece pieceCible) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    
+    public IntVar getCoordColonne(){
+    	return this.coordColonne;
+    }
+    
+    public Model getModel(){
+    	return this.model;
+    }
+    public String getType(){
+    	return this.type;
+    }
 }
