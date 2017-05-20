@@ -33,7 +33,6 @@ public class Surveillance {
 		this.filename=filename;
 		this.parseFile();
 		this.model= new Model("MinimisationCavalierDomination");
-		this.salleMin = model.intVarMatrix("salleMin",this.dimensionY,this.dimensionX,0,4);
 		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,5);
 		this.sum=model.intVar("sum", 0, this.dimensionX*this.dimensionY);
 		this.numCamera = model.intVar("objective", 1, this.dimensionX*this.dimensionY);
@@ -92,7 +91,7 @@ public class Surveillance {
 	public void printBoard(){
 		for (int i=0;i<this.dimensionY;i++){
 			for (int j=0;j<this.dimensionX;j++){
-				System.out.print(this.grid[i][j]);
+				System.out.print(this.salle[i][j]);
 			}
 			System.out.print("\n");
 		}
@@ -108,18 +107,21 @@ public class Surveillance {
 		for (int i=0;i<this.dimensionY;i++){
 			line="*";
 			for (int j=0;j<this.dimensionX;j++){
-				if (this.salle[i][j].getValue()==1){
-					line+="N";
-				}else if (this.salle[i][j].getValue()==2){
-					line+="S";
-				}else if (this.salle[i][j].getValue()==3){
-					line+="E";
-				}else if (this.salle[i][j].getValue()==4){
-					line+="O";
-				}else if (this.salle[i][j].getValue()==5){
+				if (!this.grid[i][j].equals("*")){
+					if (this.salle[i][j].getValue()==1){
+						line+="N";
+					}else if (this.salle[i][j].getValue()==2){
+						line+="S";
+					}else if (this.salle[i][j].getValue()==3){
+						line+="E";
+					}else if (this.salle[i][j].getValue()==4){
+						line+="O";
+					}else{
+						line+=" ";
+					}
+				}
+				else{
 					line+="*";
-				}else{
-					line+=" ";
 				}
 			}
 			line+="*\n";
@@ -224,50 +226,34 @@ public class Surveillance {
 		IntVar numS=model.intVar("sumS", 0, this.dimensionX*this.dimensionY);
 		IntVar numE=model.intVar("sumE", 0, this.dimensionX*this.dimensionY);
 		IntVar numO=model.intVar("sumO", 0, this.dimensionX*this.dimensionY);
-		ArrayList<Constraint> OR_contraintes = new ArrayList<Constraint>();
-		ArrayList<Constraint> boolSum = new ArrayList<Constraint>();
+		ArrayList<Constraint> Nord = new ArrayList<Constraint>();
+		ArrayList<Constraint> Sud = new ArrayList<Constraint>();
+		ArrayList<Constraint> Est = new ArrayList<Constraint>();
+		ArrayList<Constraint> Ouest = new ArrayList<Constraint>();
+		ArrayList<Constraint> contrainteTotal_OR = new ArrayList<Constraint>();
 		for (int l=0;l<this.dimensionY;l++){
 			for (int k=0;k<this.dimensionX;k++){
-				//System.out.println(l + " : " + k);
-				/*if (!this.grid[l][k].equals("*")){
+				
 				if (!this.grid[l][k].equals("*")){
-					System.out.print("DebutCoord"+l+'+'+k+"\n");
-					if (this.cameraNord(l, k)!=null){
-						OR_contraintes.add(this.cameraNord(l, k));
-					}
-					if (this.cameraSud(l, k)!=null){
-						OR_contraintes.add(this.cameraSud(l, k));
-					}
-					if (this.cameraEst(l, k)!=null){
-						OR_contraintes.add(this.cameraEst(l,k));
-					}
-					if (this.cameraOuest(l, k)!=null){
-						OR_contraintes.add(this.cameraOuest(l,k));
-					}
-				}else{
-					model.arithm(this.salle[l][k], "=", 5).post();
-				}*/
-				//model.arithm(this.salleMin[l][k],">=",this.salle[l][k]);
-				//this.sum=this.sum.add(this.salle[l][k]).intVar();
-
-				//si case vide
-				if (!this.grid[l][k].equals("*")){
-					ArrayList<Constraint> contrainteTotal_OR = new ArrayList<Constraint>();
 					
 					//vide and exist une camera
 					Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", 0);
 					
 					ArrayList<Constraint> existCam_OR = new ArrayList<Constraint>();
 					//camera S
+					System.out.print("Cordone en jeu ("+l+","+k+")\n");
 					int m = l;
-					while(m > 0){
+					while(m >= 0){
 					//for(int m=0; m<l; ++m){
-						if(!this.grid[m][k].equals("*")){
-							Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
-							existCam_OR.add(contrainte_S);
-						}
-						else{
-							m = -100;
+						if (l!=m){
+							if(!this.grid[m][k].equals("*")){
+								System.out.print("Cordone en jeu ("+l+","+k+")"+"entrain de traiter SuD ("+m+","+k+")\n");
+								Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
+								Sud.add(contrainte_S);
+							}
+							else{
+								m = -100;
+							}
 						}
 						--m;
 					}
@@ -275,44 +261,65 @@ public class Surveillance {
 					m = l;
 					while(m < this.dimensionY){
 					//for(int m=l; m<this.dimensionY; ++m){
-						if(!this.grid[m][k].equals("*")){
-							Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
-							existCam_OR.add(contrainte_N);
-						}
-						else{
-							m = 100;
+						if (l!=m){
+							if(!this.grid[m][k].equals("*")){
+								System.out.print("Cordone en jeu ("+l+","+k+")"+"entrain de traiter NORD ("+m+","+k+")\n");
+								Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
+								Nord.add(contrainte_N);
+							}
+							else{
+								m = 100;
+							}
 						}
 						++m;
 					}
 					//camera E: regarde à droite
 					m = k;
-					while(m > 0){
+					while(m >= 0){
 					//for(int m=0; m<k; ++m){
-						if(!this.grid[l][m].equals("*")){
-							Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
-							existCam_OR.add(contrainte_E);
+						if (k!=m){
+							if(!this.grid[l][m].equals("*")){
+								System.out.print("Cordone en jeu ("+l+","+k+")"+"entrain de traiter Est ("+l+","+m+")\n");
+								Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
+								Est.add(contrainte_E);
+							}
+							else{
+								m = -100;
+							}
 						}
-						else{
-							m = -100;
-						}
-						
 						--m;
 					}
 					//camera O: regarde à gauche
 					m = k;
 					while(m < this.dimensionX){
 					//for(int m=k; m<this.dimensionX; ++m){
-						if(!this.grid[l][m].equals("*")){
-							Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
-							existCam_OR.add(contrainte_O);
-						}
-						else{
-							m = 100;
+						if (k!=m){
+							if(!this.grid[l][m].equals("*")){
+								System.out.print("Cordone en jeu ("+l+","+k+")"+"entrain de traiter Ouest("+l+","+m+")\n");
+								Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
+								Ouest.add(contrainte_O);
+							}
+							else{
+								m = 100;
+							}
 						}
 						++m;
 					}
 					
 					//contrainte vide and exists camera dans croix
+					 //model.or(existCam_OR.toArray(new Constraint[]{})).post();;
+					if (!Nord.isEmpty()){
+						existCam_OR.add(model.or(Nord.toArray(new Constraint[]{})));
+					}
+					if (!Sud.isEmpty()){
+						existCam_OR.add(model.or(Sud.toArray(new Constraint[]{})));
+					}
+					if (!Est.isEmpty()){
+						existCam_OR.add(model.or(Est.toArray(new Constraint[]{})));
+					}
+					if (!Ouest.isEmpty()){
+						existCam_OR.add(model.or(Ouest.toArray(new Constraint[]{})));
+					}
 					Constraint videCamera_AND = model.and(contrainte_vide, model.or(existCam_OR.toArray(new Constraint[]{})));
 					
 					contrainteTotal_OR.add(videCamera_AND);
@@ -320,13 +327,25 @@ public class Surveillance {
 					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 2));
 					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 3));
 					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 4));
-					
-					model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
+					/*if (!Nord.isEmpty()){
+						contrainteTotal_OR.add(model.or(Nord.toArray(new Constraint[]{})));
+					}
+					if (!Sud.isEmpty()){
+						contrainteTotal_OR.add(model.or(Sud.toArray(new Constraint[]{})));
+					}
+					if (!Est.isEmpty()){
+						contrainteTotal_OR.add(model.or(Est.toArray(new Constraint[]{})));
+					}
+					if (!Ouest.isEmpty()){
+						contrainteTotal_OR.add(model.or(Ouest.toArray(new Constraint[]{})));
+					}
+					model.and(contrainte_vide,model.or(contrainteTotal_OR.toArray(new Constraint[]{}))).post();*/
 				}
 				//sinon c'est un mur
-				else {
+				else{
 					model.arithm(this.salle[l][k], "=", 5).post();
 				}
+				
 				
 
 			//if(!OR_contraintes.isEmpty()){
@@ -361,6 +380,7 @@ public class Surveillance {
 			System.out.print(numE+"\n");
 
 			this.printSalle();
+			this.printBoard();
 
 		}
 		//System.out.print(this.Solution[0][1]);
