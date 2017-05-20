@@ -34,7 +34,7 @@ public class Surveillance {
 		this.parseFile();
 		this.model= new Model("MinimisationCavalierDomination");
 		this.salleMin = model.intVarMatrix("salleMin",this.dimensionY,this.dimensionX,0,4);
-		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,4);
+		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,5);
 		this.sum=model.intVar("sum", 0, this.dimensionX*this.dimensionY);
 		this.numCamera = model.intVar("objective", 1, this.dimensionX*this.dimensionY);
 		
@@ -108,20 +108,18 @@ public class Surveillance {
 		for (int i=0;i<this.dimensionY;i++){
 			line="*";
 			for (int j=0;j<this.dimensionX;j++){
-				if (!this.grid[i][j].equals("*")){
-					if (this.salle[i][j].getValue()==1){
-						line+="N";
-					}else if (this.salle[i][j].getValue()==2){
-						line+="S";
-					}else if (this.salle[i][j].getValue()==3){
-						line+="E";
-					}else if (this.salle[i][j].getValue()==4){
-						line+="O";
-					}else{
-						line+=" ";
-					}
-				}else{
+				if (this.salle[i][j].getValue()==1){
+					line+="N";
+				}else if (this.salle[i][j].getValue()==2){
+					line+="S";
+				}else if (this.salle[i][j].getValue()==3){
+					line+="E";
+				}else if (this.salle[i][j].getValue()==4){
+					line+="O";
+				}else if (this.salle[i][j].getValue()==5){
 					line+="*";
+				}else{
+					line+=" ";
 				}
 			}
 			line+="*\n";
@@ -219,7 +217,7 @@ public class Surveillance {
 						OR_contraintes.add(this.cameraOuest(l,k));
 					}
 				}else{
-					model.arithm(this.salle[l][k], "=", 0).post();
+					model.arithm(this.salle[l][k], "=", 5).post();
 				}
 				//model.arithm(this.salleMin[l][k],">=",this.salle[l][k]);
 				//this.sum=this.sum.add(this.salle[l][k]).intVar();
@@ -231,26 +229,25 @@ public class Surveillance {
 				OR_contraintes.clear();
 			}
 			
-			boolSum.add(model.count(1, this.salle[l], numN));
-			boolSum.add(model.count(2, this.salle[l],numS));
-			boolSum.add(model.count(3, this.salle[l], numE));
-			boolSum.add(model.count(4, this.salle[l], numO));
-			model.sum(new IntVar[]{numN,numS,numE,numO},"+",this.sum);
+			model.count(1, this.salle[l], numN).post();
+			model.count(2, this.salle[l],numS).post();
+			model.count(3, this.salle[l], numE).post();
+			model.count(4, this.salle[l], numO).post();
+			this.sum=this.sum.add(numN).intVar();
+			this.sum=this.sum.add(numS).intVar();
+			this.sum=this.sum.add(numE).intVar();
+			this.sum=this.sum.add(numO).intVar();
+			//model.sum(new IntVar[]{numN,numS,numE,numO},"+",this.sum);
 		}
 		
-		//this.numCamera.eq(sum).post();
+		this.numCamera.eq(this.sum).post();
 		this.model.setObjective(Model.MINIMIZE, this.numCamera);
 		Solver solver = model.getSolver();
 		while(solver.solve()){
 			//this.setSolution();
-			System.out.print(numN+"\n");
-			System.out.print(numS+"\n");
-			System.out.print(numE+"\n");
-			System.out.print(numO+"\n");
 			System.out.print(this.sum+"\n");
 			this.printSalle();
 
-			this.printBoard();
 		}
 		//System.out.print(this.Solution[0][1]);
 		//this.printingBoard();
