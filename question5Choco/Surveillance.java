@@ -33,7 +33,8 @@ public class Surveillance {
 		this.filename=filename;
 		this.parseFile();
 		this.model= new Model("MinimisationCavalierDomination");
-		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,1);
+		this.salleMin = model.intVarMatrix("salleMin",this.dimensionY,this.dimensionX,0,4);
+		this.salle = model.intVarMatrix("salle",this.dimensionY,this.dimensionX,0,4);
 		this.sum=model.intVar("sum", 0, this.dimensionX*this.dimensionY);
 		this.numCamera = model.intVar("objective", 1, this.dimensionX*this.dimensionY);
 		
@@ -91,7 +92,7 @@ public class Surveillance {
 	public void printBoard(){
 		for (int i=0;i<this.dimensionY;i++){
 			for (int j=0;j<this.dimensionX;j++){
-				System.out.print(this.grid[i][j]);
+				System.out.print(this.salle[i][j]);
 			}
 			System.out.print("\n");
 		}
@@ -108,7 +109,6 @@ public class Surveillance {
 			line="*";
 			for (int j=0;j<this.dimensionX;j++){
 				if (!this.grid[i][j].equals("*")){
-					//System.out.print(i+" "+j+" "+this.grid[i][j]+"\n");
 					if (this.salle[i][j].getValue()==1){
 						line+="N";
 					}else if (this.salle[i][j].getValue()==2){
@@ -134,94 +134,133 @@ public class Surveillance {
 		System.out.println(line);
 	}
 	
-	public Constraint cameraNordSud(IntVar[][] sal,int ligne, int colonne,int Sud,int Nord){
-		ArrayList<Constraint> cameraNordSud=new ArrayList<Constraint>();
-		
-		//System.out.print(ligne +" "+colonne+"\n");
+	public Constraint cameraNord(int ligne, int colonne){
+		ArrayList<Constraint> cameraNord=new ArrayList<Constraint>();
 		for (int k=0;k<this.dimensionY;k++){
 			if (ligne!=k){
 				//System.out.print(k);
 				if (ligne<k){
-					Constraint voit=this.model.arithm(sal[k][colonne], "=", Sud); //SUD
-					cameraNordSud.add(voit);
-				}
-				else if (ligne>k){
-					Constraint voit=this.model.arithm(sal[k][colonne], "=", Nord); //NORD
-					cameraNordSud.add(voit);
+					Constraint voit=this.model.arithm(this.salle[k][colonne], "=", 1); //Nord
+					cameraNord.add(voit);
 				}
 			}
 		}
-		return model.or(cameraNordSud.toArray(new Constraint[]{}));
+		if (!cameraNord.isEmpty()){
+			return model.or(cameraNord.toArray(new Constraint[]{}));
+		}
+		return null;
 	}
-	
-	public Constraint cameraEstOuest(IntVar[][] sal,int ligne, int colonne,int Est,int Ouest){
-		ArrayList<Constraint> cameraEstOuest=new ArrayList<Constraint>();
+	public Constraint cameraSud(int ligne, int colonne){
+		ArrayList<Constraint> cameraSud=new ArrayList<Constraint>();
+		for (int k=0;k<this.dimensionY;k++){
+			if (ligne!=k){
+				if (ligne>k){
+					Constraint voit=this.model.arithm(this.salle[k][colonne], "=", 2); //Sud
+					cameraSud.add(voit);
+				}
+			}
+		}
+		if (!cameraSud.isEmpty()){
+			return model.or(cameraSud.toArray(new Constraint[]{}));
+		}
+		return null;
+	}
+	public Constraint cameraEst(int ligne, int colonne){
+		ArrayList<Constraint> cameraEst=new ArrayList<Constraint>();
+		for (int k=0;k<this.dimensionY;k++){
+			if (colonne!=k){
+				if(colonne>k){
+					Constraint voit=this.model.arithm(this.salle[ligne][k], "=", 3); //Est
+					cameraEst.add(voit);
+				}
+			}
+		}
+		if (!cameraEst.isEmpty()){
+			return model.or(cameraEst.toArray(new Constraint[]{}));
+		}
+		return null;
+	}
+	public Constraint cameraOuest(int ligne, int colonne){
+		ArrayList<Constraint> cameraOuest=new ArrayList<Constraint>();
 		for (int k=0;k<this.dimensionY;k++){
 			if (colonne!=k){
 				if (colonne<k){
-					Constraint voit=this.model.arithm(sal[ligne][k], "=", Est); //EST
-					cameraEstOuest.add(voit);
-				}
-				else if(colonne>k){
-					Constraint voit=this.model.arithm(sal[ligne][k], "=", Ouest); //Ouest
-					cameraEstOuest.add(voit);
+					Constraint voit=this.model.arithm(this.salle[ligne][k], "=", 4); //Ouest
+					cameraOuest.add(voit);
 				}
 			}
 		}
-		return model.or(cameraEstOuest.toArray(new Constraint[]{}));
+		if (!cameraOuest.isEmpty()){
+			return model.or(cameraOuest.toArray(new Constraint[]{}));
+		}
+		return null;
 	}
 	
 	public void minCamera(){
-		//ArrayList<Constraint> OR_contraintes = new ArrayList<Constraint>();
-		ArrayList<Camera> allCamera=new ArrayList<Camera>();
-		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
-			CameraNord nord=new CameraNord(this.model,this.dimensionY,this.dimensionX);
-			allCamera.add(nord);
-		}
-		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
-			CameraSud sud=new CameraSud(this.model,this.dimensionY,this.dimensionX);
-			allCamera.add(sud);
-		}
-		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
-			CameraEst est=new CameraEst(this.model,this.dimensionY,this.dimensionX);
-			allCamera.add(est);
-		}
-		for (int i=0;i<this.dimensionY*this.dimensionX;i++){
-			CameraOuest ouest=new CameraOuest(this.model,this.dimensionY,this.dimensionX);
-			allCamera.add(ouest);
-		}
-		
+		IntVar numN=model.intVar("sumN", 0, this.dimensionX*this.dimensionY);
+		IntVar numS=model.intVar("sumS", 0, this.dimensionX*this.dimensionY);
+		IntVar numE=model.intVar("sumE", 0, this.dimensionX*this.dimensionY);
+		IntVar numO=model.intVar("sumO", 0, this.dimensionX*this.dimensionY);
+		ArrayList<Constraint> OR_contraintes = new ArrayList<Constraint>();
+		ArrayList<Constraint> boolSum = new ArrayList<Constraint>();
 		for (int l=0;l<this.dimensionY;l++){
 			for (int k=0;k<this.dimensionX;k++){
-				if (this.grid[l][k]!="*"){
-					OR_contraintes.add(this.cameraNordSud(this.salle,l, k,Sud,Nord));
-					OR_contraintes_Min.add(this.cameraNordSud(this.salleMin, l, k, 1, 1));
-					OR_contraintes.add(this.cameraEstOuest(this.salle,l,k,Est,Ouest));
-					OR_contraintes_Min.add(this.cameraNordSud(this.salleMin, l, k, 1, 1));
+				if (!this.grid[l][k].equals("*")){
+					if (this.cameraNord(l, k)!=null){
+						OR_contraintes.add(this.cameraNord(l, k));
+					}
+					if (this.cameraSud(l, k)!=null){
+						OR_contraintes.add(this.cameraSud(l, k));
+					}
+					if (this.cameraEst(l, k)!=null){
+						OR_contraintes.add(this.cameraEst(l,k));
+					}
+					if (this.cameraOuest(l, k)!=null){
+						OR_contraintes.add(this.cameraOuest(l,k));
+					}
+				}else{
+					model.arithm(this.salle[l][k], "=", 0).post();
 				}
-				model.arithm(this.salleMin[l][k],"<=", this.salle[l][k]).post();;
-				this.sum=this.sum.add(this.salleMin[l][k]).intVar();
-				
+				//model.arithm(this.salleMin[l][k],">=",this.salle[l][k]);
+				//this.sum=this.sum.add(this.salle[l][k]).intVar();
+
 			}
+			
 			if(!OR_contraintes.isEmpty()){
 				model.or(OR_contraintes.toArray(new Constraint[]{})).post();
 				OR_contraintes.clear();
 			}
-			if(!OR_contraintes_Min.isEmpty()){
-				model.or(OR_contraintes_Min.toArray(new Constraint[]{})).post();
-				OR_contraintes_Min.clear();
-			}
+			
+			boolSum.add(model.count(1, this.salle[l], numN));
+			boolSum.add(model.count(2, this.salle[l],numS));
+			boolSum.add(model.count(3, this.salle[l], numE));
+			boolSum.add(model.count(4, this.salle[l], numO));
+			model.sum(new IntVar[]{numN,numS,numE,numO},"+",this.sum);
 		}
-		this.numCamera.eq(sum).post();
+		
+		//this.numCamera.eq(sum).post();
 		this.model.setObjective(Model.MINIMIZE, this.numCamera);
 		Solver solver = model.getSolver();
 		while(solver.solve()){
 			//this.setSolution();
+			System.out.print(numN+"\n");
+			System.out.print(numS+"\n");
+			System.out.print(numE+"\n");
+			System.out.print(numO+"\n");
+			System.out.print(this.sum+"\n");
 			this.printSalle();
-			System.out.print(this.numCamera+"\n");
+
+			this.printBoard();
 		}
 		//System.out.print(this.Solution[0][1]);
 		//this.printingBoard();
+
+		/*Solver solver = model.getSolver();
+		if(solver.solve()){
+		    this.printSalle();
+		}else {
+		    System.out.println("Pas de solution trouvée.");
+		}*/
 	}
 		
 }

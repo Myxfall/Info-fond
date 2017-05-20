@@ -26,10 +26,10 @@ public class Main {
 		
 		Jeu jeu =new Jeu(n,t,f,c);
 		
-		if(cmd.hasOption("-i")) {
+		if(cmd.hasOption("-i") && cmd.hasOption("-n") && cmd.hasOption("-t") && cmd.hasOption("-f") && cmd.hasOption("-c")) {
 			jeu.independance();
 		}
-		else if (cmd.hasOption("-d")){
+		else if(cmd.hasOption("-d") && cmd.hasOption("-n") && cmd.hasOption("-t") && cmd.hasOption("-f") && cmd.hasOption("-c")){
 			jeu.domination();
 		}
 		else{
