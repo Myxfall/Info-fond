@@ -111,6 +111,7 @@ public class Jeu {
 						Constraint attaque = pieceSubit.Menace(pieceAttaque);
 						OR_contraintes.add(attaque);
 					}
+					//if (((pieceAttaque.getType()=="T") && (pieceSubit.getType()=="F")) || (pieceAttaque.getType()=="T" && pieceSubit.getType()=="C") || (pieceAttaque.getType()=="F" && pieceSubit.getType()=="C")){
 					if ((pieceAttaque.getType()=="T") && (pieceSubit.getType()=="F")){
 						Constraint attaque = model.not(pieceAttaque.Menace(pieceSubit));
 						OR_contraintes.add(attaque);

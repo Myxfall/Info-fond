@@ -203,7 +203,8 @@ public class Surveillance {
 		ArrayList<Constraint> boolSum = new ArrayList<Constraint>();
 		for (int l=0;l<this.dimensionY;l++){
 			for (int k=0;k<this.dimensionX;k++){
-				if (!this.grid[l][k].equals("*")){
+				//System.out.println(l + " : " + k);
+				/*if (!this.grid[l][k].equals("*")){
 					if (this.cameraNord(l, k)!=null){
 						OR_contraintes.add(this.cameraNord(l, k));
 					}
@@ -218,16 +219,94 @@ public class Surveillance {
 					}
 				}else{
 					model.arithm(this.salle[l][k], "=", 5).post();
-				}
+				}*/
 				//model.arithm(this.salleMin[l][k],">=",this.salle[l][k]);
 				//this.sum=this.sum.add(this.salle[l][k]).intVar();
 
+				//si case vide
+				if (!this.grid[l][k].equals("*")){
+					ArrayList<Constraint> contrainteTotal_OR = new ArrayList<Constraint>();
+					
+					//vide and exist une camera
+					Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", 0);
+					
+					ArrayList<Constraint> existCam_OR = new ArrayList<Constraint>();
+					//camera S
+					int m = l;
+					while(m > 0){
+					//for(int m=0; m<l; ++m){
+						if(!this.grid[m][k].equals("*")){
+							Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
+							existCam_OR.add(contrainte_S);
+						}
+						else{
+							m = -100;
+						}
+						--m;
+					}
+					//camera N
+					m = l;
+					while(m < this.dimensionY){
+					//for(int m=l; m<this.dimensionY; ++m){
+						if(!this.grid[m][k].equals("*")){
+							Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
+							existCam_OR.add(contrainte_N);
+						}
+						else{
+							m = 100;
+						}
+						++m;
+					}
+					//camera E: regarde à droite
+					m = k;
+					while(m > 0){
+					//for(int m=0; m<k; ++m){
+						if(!this.grid[l][m].equals("*")){
+							Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
+							existCam_OR.add(contrainte_E);
+						}
+						else{
+							m = -100;
+						}
+						
+						--m;
+					}
+					//camera O: regarde à gauche
+					m = k;
+					while(m < this.dimensionX){
+					//for(int m=k; m<this.dimensionX; ++m){
+						if(!this.grid[l][m].equals("*")){
+							Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
+							existCam_OR.add(contrainte_O);
+						}
+						else{
+							m = 100;
+						}
+						++m;
+					}
+					
+					//contrainte vide and exists camera dans croix
+					Constraint videCamera_AND = model.and(contrainte_vide, model.or(existCam_OR.toArray(new Constraint[]{})));
+					
+					contrainteTotal_OR.add(videCamera_AND);
+					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 1));
+					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 2));
+					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 3));
+					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 4));
+					
+					model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
+				}
+				//sinon c'est un mur
+				else {
+					model.arithm(this.salle[l][k], "=", 5).post();
+				}
+				
 			}
 			
-			if(!OR_contraintes.isEmpty()){
-				model.or(OR_contraintes.toArray(new Constraint[]{})).post();
-				OR_contraintes.clear();
-			}
+			//if(!OR_contraintes.isEmpty()){
+				//model.or(OR_contraintes.toArray(new Constraint[]{})).post();
+				//OR_contraintes.clear();
+			//}
 			
 			model.count(1, this.salle[l], numN).post();
 			model.count(2, this.salle[l],numS).post();
@@ -246,6 +325,10 @@ public class Surveillance {
 		while(solver.solve()){
 			//this.setSolution();
 			System.out.print(this.sum+"\n");
+			System.out.print(numN+"\n");
+			System.out.print(numS+"\n");
+			System.out.print(numO+"\n");
+			System.out.print(numE+"\n");
 			this.printSalle();
 
 		}
