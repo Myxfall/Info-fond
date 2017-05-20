@@ -92,7 +92,7 @@ public class Surveillance {
 	public void printBoard(){
 		for (int i=0;i<this.dimensionY;i++){
 			for (int j=0;j<this.dimensionX;j++){
-				System.out.print(this.salle[i][j]);
+				System.out.print(this.grid[i][j]);
 			}
 			System.out.print("\n");
 		}
@@ -134,12 +134,17 @@ public class Surveillance {
 	
 	public Constraint cameraNord(int ligne, int colonne){
 		ArrayList<Constraint> cameraNord=new ArrayList<Constraint>();
+		Boolean stop=true;
 		for (int k=0;k<this.dimensionY;k++){
 			if (ligne!=k){
 				//System.out.print(k);
 				if (ligne<k){
-					Constraint voit=this.model.arithm(this.salle[k][colonne], "=", 1); //Nord
-					cameraNord.add(voit);
+					if (!this.grid[k][colonne].equals("*") && stop){
+						Constraint voit=this.model.arithm(this.salle[k][colonne], "=", 1); //Nord
+						cameraNord.add(voit);
+					}else{
+						stop=false;
+					}
 				}
 			}
 		}
@@ -150,11 +155,16 @@ public class Surveillance {
 	}
 	public Constraint cameraSud(int ligne, int colonne){
 		ArrayList<Constraint> cameraSud=new ArrayList<Constraint>();
+		Boolean stop=true;
 		for (int k=0;k<this.dimensionY;k++){
 			if (ligne!=k){
 				if (ligne>k){
-					Constraint voit=this.model.arithm(this.salle[k][colonne], "=", 2); //Sud
-					cameraSud.add(voit);
+					if (!this.grid[k][colonne].equals("*") && stop){
+						Constraint voit=this.model.arithm(this.salle[k][colonne], "=", 2); //Sud
+						cameraSud.add(voit);
+					}else{
+						stop=false;
+					}
 				}
 			}
 		}
@@ -165,11 +175,18 @@ public class Surveillance {
 	}
 	public Constraint cameraEst(int ligne, int colonne){
 		ArrayList<Constraint> cameraEst=new ArrayList<Constraint>();
-		for (int k=0;k<this.dimensionY;k++){
+		Boolean stop=true;
+		for (int k=0;k<this.dimensionX;k++){
 			if (colonne!=k){
-				if(colonne>k){
-					Constraint voit=this.model.arithm(this.salle[ligne][k], "=", 3); //Est
-					cameraEst.add(voit);
+				if (k<colonne){
+					if (!this.grid[ligne][k].equals("*") && stop){
+					
+						Constraint voit=this.model.arithm(this.salle[ligne][k], "=", 3); //Est
+						cameraEst.add(voit);
+					}
+					else{
+						stop=false;
+					}
 				}
 			}
 		}
@@ -179,12 +196,20 @@ public class Surveillance {
 		return null;
 	}
 	public Constraint cameraOuest(int ligne, int colonne){
+		System.out.print("CameraOuest"+ligne+'+'+colonne+"\n");
 		ArrayList<Constraint> cameraOuest=new ArrayList<Constraint>();
-		for (int k=0;k<this.dimensionY;k++){
+		Boolean stop=true;
+		for (int k=0;k<this.dimensionX;k++){
+			System.out.print(k);
 			if (colonne!=k){
 				if (colonne<k){
-					Constraint voit=this.model.arithm(this.salle[ligne][k], "=", 4); //Ouest
-					cameraOuest.add(voit);
+					if (!this.grid[ligne][k].equals("*") && stop){
+						System.out.print("CameraOuestDedans"+ligne+'+'+k+"\n");
+						Constraint voit=this.model.arithm(this.salle[ligne][k], "=", 4); //Ouest
+						cameraOuest.add(voit);
+					}else{
+						stop=false;
+					}
 				}
 			}
 		}
@@ -204,6 +229,7 @@ public class Surveillance {
 		for (int l=0;l<this.dimensionY;l++){
 			for (int k=0;k<this.dimensionX;k++){
 				if (!this.grid[l][k].equals("*")){
+					System.out.print("DebutCoord"+l+'+'+k+"\n");
 					if (this.cameraNord(l, k)!=null){
 						OR_contraintes.add(this.cameraNord(l, k));
 					}
@@ -221,13 +247,12 @@ public class Surveillance {
 				}
 				//model.arithm(this.salleMin[l][k],">=",this.salle[l][k]);
 				//this.sum=this.sum.add(this.salle[l][k]).intVar();
-
+				if(!OR_contraintes.isEmpty()){
+					model.or(OR_contraintes.toArray(new Constraint[]{})).post();
+					OR_contraintes.clear();
+				}
 			}
 			
-			if(!OR_contraintes.isEmpty()){
-				model.or(OR_contraintes.toArray(new Constraint[]{})).post();
-				OR_contraintes.clear();
-			}
 			
 			model.count(1, this.salle[l], numN).post();
 			model.count(2, this.salle[l],numS).post();
@@ -245,7 +270,7 @@ public class Surveillance {
 		Solver solver = model.getSolver();
 		while(solver.solve()){
 			//this.setSolution();
-			System.out.print(this.sum+"\n");
+			//System.out.print(this.sum+"\n");
 			this.printSalle();
 
 		}
