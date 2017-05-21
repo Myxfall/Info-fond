@@ -33,19 +33,25 @@ public class Surveillance {
 	private IntVar[][] salle;
 	private int numVide;
 	private String[][] solution;
-	private ArrayList<Constraint> videEntre;
 	
+	/**
+	 * Constructor
+	 * @param filename fichier a parser
+	 */
 	public Surveillance(String filename){
 		this.filename=filename;
 		this.parseFile();
 		this.model= new Model("MinimisationCavalierDomination");
 		this.salle = model.intVarMatrix("salle",this.nbrLigne,this.nbrColonne,0,5);
 		this.solution=new String[this.nbrLigne+2][this.nbrColonne+2];
-		this.videEntre = new ArrayList<Constraint>();
 		
 		
 	}
-
+ 
+	/**
+	 * methode qui permet d'avoir le nombre de colonnes depuis la grille du fichier
+	 * @throws FileNotFoundException
+	 */
 	public void numberOfCharPerLine() throws FileNotFoundException{
 		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
 		String currentLine;
@@ -57,6 +63,11 @@ public class Surveillance {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * methode qui permet d'avoir le nombre de lignes depuis la grille du fichier
+	 * @throws FileNotFoundException
+	 */
 	public void numberOfLines() throws FileNotFoundException{
 		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
 		int count=0;
@@ -71,6 +82,9 @@ public class Surveillance {
 			e.printStackTrace();
 		}	
 	}
+	/**
+	 * methode qui va parser le fichier
+	 */
 	private void parseFile(){
 		System.out.println("Parsing File: "+this.filename);
 		String currentLine;
@@ -94,116 +108,10 @@ public class Surveillance {
 		}
 	}
 	
-	public void printBoard(){
-		for (int i=0;i<this.nbrLigne;i++){
-			for (int j=0;j<this.nbrColonne;j++){
-				System.out.print(this.salle[i][j]);
-			}
-			System.out.print("\n");
-		}
-	}
-	
-	public void printSalle(){
-		String line="";
-		for (int i=0;i<this.nbrColonne+2;i++){
-			line+="*";
-		}
-		System.out.println(line);
-		//this.printBoard();
-		for (int i=0;i<this.nbrLigne;i++){
-			line="*";
-			for (int j=0;j<this.nbrColonne;j++){
-				if (!this.grid[i][j].equals("*")){
-					if (this.salle[i][j].getValue()==1){
-						line+="N";
-					}else if (this.salle[i][j].getValue()==2){
-						line+="S";
-					}else if (this.salle[i][j].getValue()==3){
-						line+="E";
-					}else if (this.salle[i][j].getValue()==4){
-						line+="O";
-					}else{
-						line+=" ";
-					}
-				}
-				else{
-					line+="*";
-				}
-			}
-			line+="*\n";
-			System.out.print(line);
-		}
-		line="";
-		for (int i=0;i<this.nbrColonne+2;i++){
-			line+="*";
-		}
-		System.out.println(line);
-	}
-	
-	
-	public Constraint cameraNord(int ligne, int colonne){
-		ArrayList<Constraint> cameraNord=new ArrayList<Constraint>();
-		for (int l=ligne; l<this.nbrLigne;l++){
-			this.videEntre.clear();
-			for (int k=ligne; k<l ;k++){
-				videEntre.add(model.arithm(this.salle[k][colonne], "=", this.VIDE));
-			}
-			videEntre.add(model.arithm(this.salle[l][colonne], "=", this.NORD));
-			cameraNord.add(model.and(videEntre.toArray(new Constraint[]{})));
-		}
-		if (!cameraNord.isEmpty()){
-			return model.or(cameraNord.toArray(new Constraint[]{}));
-		}
-		return model.falseConstraint();
-	}
-	
-	public Constraint cameraSud(int ligne, int colonne){
-		ArrayList<Constraint> cameraSud=new ArrayList<Constraint>();
-		for (int l=ligne; l>0;l--){
-			this.videEntre.clear();
-			for (int k=ligne; k>l ;k--){
-				videEntre.add(model.arithm(this.salle[k][colonne], "=", this.VIDE));
-			}
-			videEntre.add(model.arithm(this.salle[l][colonne], "=", this.SUD));
-			cameraSud.add(model.and(videEntre.toArray(new Constraint[]{})));
-		}
-		if (!cameraSud.isEmpty()){
-			return model.or(cameraSud.toArray(new Constraint[]{}));
-		}
-		return model.falseConstraint();
-	}
-	public Constraint cameraEst(int ligne, int colonne){
-		ArrayList<Constraint> cameraEst=new ArrayList<Constraint>();
-		for (int l=colonne; l>0;l--){
-			this.videEntre.clear();
-			for (int k=colonne; k>l ;k--){
-				videEntre.add(model.arithm(this.salle[ligne][k], "=", this.VIDE));
-			}
-			videEntre.add(model.arithm(this.salle[ligne][l], "=", this.EST));
-			cameraEst.add(model.and(videEntre.toArray(new Constraint[]{})));
-		}
-		if (!cameraEst.isEmpty()){
-			return model.or(cameraEst.toArray(new Constraint[]{}));
-		}
-		return model.falseConstraint();
-	}
-	
-	public Constraint cameraOuest(int ligne, int colonne){
-		ArrayList<Constraint> cameraOuest=new ArrayList<Constraint>();
-		for (int l=colonne; l<this.nbrColonne;l++){
-			this.videEntre.clear();
-			for (int k=colonne; k<l ;k++){
-				videEntre.add(model.arithm(this.salle[ligne][k], "=", this.VIDE));
-			}
-			videEntre.add(model.arithm(this.salle[ligne][l], "=", this.OUEST));
-			cameraOuest.add(model.and(videEntre.toArray(new Constraint[]{})));
-		}
-		if (!cameraOuest.isEmpty()){
-			return model.or(cameraOuest.toArray(new Constraint[]{}));
-		}
-		return model.falseConstraint();
-	}
-	
+	/**
+	 * methode qui permet d'avoir la derniere solution
+	 * @param numV le nombre de case Vide
+	 */
 	public void setSolution(IntVar numV){
 		this.numVide=0;
 		for (int i=0;i<this.nbrColonne+2;i++){
@@ -245,7 +153,9 @@ public class Surveillance {
 		}
 		
 	}
-	
+	/**
+	 * methode qui permet d'afficher la solution
+	 */
 	public void printSolution(){
 		System.out.print(this.numVide+"\n");
 		String line;
@@ -258,6 +168,10 @@ public class Surveillance {
 		}
 		
 	}
+	
+	/**
+	 * methode qui permet de minimiser le nombre de camera utilisé
+	 */
 	public void minCamera(){
 		IntVar numV=model.intVar("sumVide", 0, this.nbrColonne*this.nbrLigne);
 		ArrayList<Constraint> contrainteTotal_OR = new ArrayList<Constraint>();
