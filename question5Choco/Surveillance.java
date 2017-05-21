@@ -34,7 +34,6 @@ public class Surveillance {
 	private IntVar numCamera;
 	private int numVide;
 
-	
 	public Surveillance(String filename){
 		this.filename=filename;
 		this.parseFile();
@@ -43,8 +42,6 @@ public class Surveillance {
 		this.sum=model.intVar("sum", 0, this.nbrLigne*this.nbrColonne);
 		this.numCamera = model.intVar("objective", 1,  this.nbrLigne*this.nbrColonne);
 		this.solution=new String[this.nbrLigne+2][this.nbrColonne+2];
-
-		
 	}
 
 	public void numberOfCharPerLine() throws FileNotFoundException{
@@ -59,6 +56,7 @@ public class Surveillance {
 			e.printStackTrace();
 		}
 	}
+	
 	public void numberOfLines() throws FileNotFoundException{
 		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
 		int count=0;
@@ -74,6 +72,7 @@ public class Surveillance {
 			e.printStackTrace();
 		}	
 	}
+	
 	private void parseFile(){
 		System.out.println("Parsing File: "+this.filename);
 		String currentLine;
@@ -111,8 +110,7 @@ public class Surveillance {
 		for (int i=0;i<this.nbrColonne+2;i++){
 			line+="*";
 		}
-		System.out.println(line);
-		//this.printBoard();
+
 		for (int i=0;i<this.nbrLigne;i++){
 			line="*";
 			for (int j=0;j<this.nbrColonne;j++){
@@ -144,105 +142,96 @@ public class Surveillance {
 	}
 
 	public void minCamera(){
-		IntVar numN=model.intVar("sumN", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numS=model.intVar("sumS", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numE=model.intVar("sumE", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numO=model.intVar("sumO", 0, this.nbrColonne*this.nbrLigne);
 		IntVar numV=model.intVar("sumVide", 0, this.nbrColonne*this.nbrLigne);
-
-		ArrayList<Constraint> Nord = new ArrayList<Constraint>();
-		ArrayList<Constraint> Sud = new ArrayList<Constraint>();
-		ArrayList<Constraint> Est = new ArrayList<Constraint>();
-		ArrayList<Constraint> Ouest = new ArrayList<Constraint>();
 		ArrayList<Constraint> contrainteTotal_OR = new ArrayList<Constraint>();
 		ArrayList<Constraint> existCam_OR = new ArrayList<Constraint>();
-		ArrayList<Integer> ligne_avant=new ArrayList<Integer>();
-		ArrayList<Integer> colonne_avant=new ArrayList<Integer>();
 		for (int l=0;l<this.nbrLigne;l++){
 			for (int k=0;k<this.nbrColonne;k++){
 				
-				 				//si case vide
-				  				if (!this.grid[l][k].equals("*")){
-				  					contrainteTotal_OR = new ArrayList<Constraint>();
-				  					
-				  					//vide and exist une camera
-				  					Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", 0);
-				  					
-				  					existCam_OR = new ArrayList<Constraint>();
-				  					//camera S
-				  					int m = l;
-				  					while(m > 0){
-				  					//for(int m=0; m<l;  ++m){
-				  						if(!this.grid[m][k].equals("*")){
-				  							Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
-				  							existCam_OR.add(contrainte_S);
-				  						}
-				  						else{
-				  							m = -100;
-				  						}
-				  						--m;
-				  					}
-				  					//camera N
-				  					m = l;
-				  					while(m < this.dimensionY){
-				  					//for(int m=l; m<this.dimensionY; ++m){
-				  						if(!this.grid[m][k].equals("*")){
-				  							Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
-				  							existCam_OR.add(contrainte_N);
-				  						}
-				  						else{
-				  							m = 100;
-				  						}
-				  						++m;
-				  					}
-				  					//camera E: regarde à droite
-				  					m = k;
-				  					while(m > 0){
-				  					//for(int m=0; m<k; ++m){
-				 					if(!this.grid[l][m].equals("*")){
-				  							Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
-				  							existCam_OR.add(contrainte_E);
-				  						}
-				  						else{
-				  							m = -100;
-				  						}
-				  						
-				  						--m;
-				  					}
-				  					//camera O: regarde à gauche
-				 					m = k;
-				 					while(m < this.dimensionX){
-				  					//for(int m=k; m<this.dimensionX; ++m){
-				  						if(!this.grid[l][m].equals("*")){
-				  							Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
-				  							existCam_OR.add(contrainte_O);
-				  						}
-				  						else{
-				  							m = 100;
-				  						}
-				  						++m;
-				  					}
-				  					
-				  					//contrainte vide and exists camera dans croix
-				  					Constraint videCamera_AND = model.and(contrainte_vide, model.or(existCam_OR.toArray(new Constraint[]{})));
-				  					
-				  					contrainteTotal_OR.add(videCamera_AND);
-				  					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 1));
-				  					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 2));
-				  					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 3));
-				  					contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 4));
-				  					
-				  					model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
-				  				}
-				  				//sinon c'est un mur
-				  				else {
-				  					model.arithm(this.salle[l][k], "=", 5).post();
-				  				}
-				  				
-				  			}
+			//si case vide
+			if (!this.grid[l][k].equals("*")){
+				contrainteTotal_OR = new ArrayList<Constraint>();
+				
+				//vide and exist une camera
+				Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", 0);
+				
+				existCam_OR = new ArrayList<Constraint>();
+				//camera S
+				int m = l;
+				while(m > 0){
+				//for(int m=0; m<l;  ++m){
+					if(!this.grid[m][k].equals("*")){
+						Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
+						existCam_OR.add(contrainte_S);
+					}
+					else{
+						m = -100;
+					}
+					--m;
+				}
+				//camera N
+				m = l;
+				while(m < this.dimensionY){
+				//for(int m=l; m<this.dimensionY; ++m){
+					if(!this.grid[m][k].equals("*")){
+						Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
+						existCam_OR.add(contrainte_N);
+					}
+					else{
+						m = 100;
+					}
+					++m;
+				}
+				//camera E: regarde à droite
+				m = k;
+				while(m > 0){
+				//for(int m=0; m<k; ++m){
+				if(!this.grid[l][m].equals("*")){
+						Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
+						existCam_OR.add(contrainte_E);
+					}
+					else{
+						m = -100;
+					}
+					
+					--m;
+				}
+				//camera O: regarde à gauche
+				m = k;
+				while(m < this.dimensionX){
+				//for(int m=k; m<this.dimensionX; ++m){
+					if(!this.grid[l][m].equals("*")){
+						Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
+						existCam_OR.add(contrainte_O);
+					}
+					else{
+						m = 100;
+					}
+					++m;
+				}
+				
+				//contrainte vide and exists camera dans croix
+				Constraint videCamera_AND = model.and(contrainte_vide, model.or(existCam_OR.toArray(new Constraint[]{})));
+				
+				contrainteTotal_OR.add(videCamera_AND);
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 1));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 2));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 3));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 4));
+				
+				model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
+			}
+				//sinon c'est un mur
+				else {
+					model.arithm(this.salle[l][k], "=", 5).post();
+				}
+			
+			}
 
-			model.or(existCam_OR.toArray(new Constraint[]{})).post();
-			existCam_OR.clear();
+//			if(!existCam_OR.isEmpty()){
+//				model.or(existCam_OR.toArray(new Constraint[]{})).post();
+//				existCam_OR.clear();
+//			}
 		}
 
 		
@@ -261,18 +250,8 @@ public class Surveillance {
 			this.setSolution(numV);
 		}
 		this.printSolution();
-
-
-		//System.out.print(this.Solution[0][1]);
-		//this.printingBoard();
-
-		/*Solver solver = model.getSolver();
-		if(solver.solve()){
-		    this.printSalle();
-		}else {
-		    System.out.println("Pas de solution trouvée.");
-		}*/
 	}
+	
 public void setSolution(IntVar numV){
 	this.numVide=0;
 	for (int i=0;i<this.nbrColonne+2;i++){

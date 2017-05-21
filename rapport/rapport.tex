@@ -141,6 +141,43 @@ $ D = \{Vide, tour, fous, cavalier \} $\\
 	\textbf{Contraintes : } La contrainte du musée est définie comme ceci: chaque case vide doit être surveillé par au moins une caméra. La solution doit être trouvée avec un nombre de caméra le plus possible.
 
 	\subsection{Contraintes CSP}
+		Pour appliquer la contrainte, il faut donc prendre en compte chaque case du musée.  Pour cela nous prenons chaque $x_{i,j}$ compris dans la taille du musée. Ensuite il faut vérifier que pour chacune de ces cases, si elle est non occupée, il faut qu'elle soit surveillé par au moins une caméra.  Ainsi nous avons une suite d'ensemble de valeurs liées par des relations \emph{OR}, qui nous permet de dire: existe au moins une caméra observant la case vide.
+
+		Afin d'être sûr qu'une caméra pointe vers le bon sens, lorsque nous parcourons les lignes et colognes d'une case vide, nous précisons bien qu'il y ai au moins une caméra regardant vers le Nord dans les cases se trouvant en dessous de notre case $x_{i,j}$, et ainsi de suite pours les autres directions.
+		$$ C = ((x_{i,j}, \forall i,j(1 \leq i \leq n ).(1 \leq j \leq m)),\{b_{i,j},\forall i,j(1 \leq i \leq n ).(1 \leq j \leq m)| [(b_{i,j} = 0) \land (\forall k (i < k \leq n), \exists b_{k,j} = 1)] \lor $$
+		$$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < i), \exists b_{k,j} = 2)] \lor $$
+		$$ [(b_{i,j} = 0) \land (\forall k (j < k \leq m), \exists b_{i,k} = 3)] \lor $$
+		$$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < j), \exists b_{i,k} = 4)] \}) $$
+
+		Afin de réduire le nombre de caméra, nous avons reformulé de la demande d'optimisation.  C'est à dire que nous n'allons plus chercher à minimiser le nombre de caméra, mais à maximiser le nombre de case surveillé, ce qui équivaut à la même solution. En effet en réduisant le nombre de caméra, on maximise le nombre de case surveillé avec un petit nombre de caméra.
+
+		Il n'y a donc pas de contrainte \emph{CSP} à écrire.  Il suffit de donner dire au programme de trouver la solution avec le plus de case vide possible.
 
 	\subsection{Partie implémentation}
+		\subsubsection{Parser}
+			La première chose à faire pour résoudre le problème de minimisation du nombre de caméra dans un musée, et de donner au programme l'architecture du musée.  C'est à dire donner au programme une carte représentant les murs et les trous à surveiller / combler par des caméras.
+
+			Pour ce faire le programme prend en paramètre d'éxécution un fichier texte sous le format suivant:
+			\begin{figure}[h]
+			\begin{center}
+				\includegraphics{figs/gridExample.png}
+			\end{center}
+			\end{figure}
+
+			Une fois que le programme récupère ce fichier, il va récupérer tout d'abord les dimensions du musée sans compter les quatres mur de la pièce.  Une fois terminé, ces valeurs sont donnée aux attributs du programme. Une matrice \emph{grid} est ensuite crée.  Cette matrice représente la situation de la pièce du musée avec les murs, et permettra ainsi au programme de placer les caméras aux bons endroits.
+
+		\subsubsection{Placements des caméras}
+			Maintenant que la matrice \emph{grid} à été initialiser, nous pouvons appliquer nos contraintes en fonction de chaque case de cette matrice. Nous faisons alors appel à \emph{minCamera()}, qui va parcourirs chaque case de notre matrice.  Si la case est différent de "*", qui correspond à un mur, alors nous allons appliquer des contraintes. Pour ce faire nous initialisons un tableau qui va contenir toutes nos contraintes, ce tableau est \emph{contrainteTotal\_OR}. C'est ce tableau qui va permettre d'indiquer au solver, si une case est vide, alors elle est surveillé par au moins une caméra. Ensuite pour la case vide, il va falloir dire: il existe au moins une caméra Sud dans les cases au dessus de notre case vide, ou alors une caméra Nord dans les cases en dessous, ou alors une caméra Est dans les cases à gauche, ou une caméra Ouest dans les cases à droite.  Pour ce faire on crée à nouveau un tableau (\emph{existsCam\_OR}) qui va contenir ces contraintes. On parcours alors en croix les cases adjacentes à la case vide, en prenant soin de nous arrêter lorsque nous rencontrons un mur. Lors de ce parcours, nous ajoutons à notre tableau la contrainte arithmétique: case parcouru $=$ caméra visant notre case vide. Une fois le parcours en croix terminé, il suffit d'ajouter au tableau \emph{contrainteTotal\_OR} quatre contraintes indiquant que la case que nous examinons peut aussi être remplit par une caméra. Il ne reste plus qu'à poster les contraintes du tableau grâce à un \emph{post()} de notre tableau.
+
+		\subsubsection{Affichage de la solution}
+			Pour afficher la solution, il ne reste plus qu'à parcourirs le tableau contenant les différentes positions des caméras utilisé par le solver (\emph{this.salle}).  Ce tableau contient la structure de la salle, les cases vides, et le entiers correspondant au caméra et leur sens.
+
+		\subsubsection{Exemple}
+			\begin{figure}[h]
+			\begin{center}
+				\includegraphics[scale=0.7]{figs/sol.png}
+			\end{center}
+			\end{figure}
+
+
 \end{document}
