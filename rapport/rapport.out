@@ -4,30 +4,25 @@
 \BOOKMARK [2][-]{subsection.2.2}{Contraintes fou}{section.2}% 4
 \BOOKMARK [2][-]{subsection.2.3}{Contraintes cavalier:}{section.2}% 5
 \BOOKMARK [1][-]{section.3}{Question 2}{}% 6
-\BOOKMARK [2][-]{subsection.3.1}{Contraintes tours}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.2}{Contraintes fous}{section.3}% 8
-\BOOKMARK [2][-]{subsection.3.3}{Contraintes cavaliers:}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.1}{Ensemble Tours}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Ensemble fous}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.3}{Ensemble cavaliers:}{section.3}% 9
 \BOOKMARK [2][-]{subsection.3.4}{Contrainte finale:}{section.3}% 10
-\BOOKMARK [1][-]{section.4}{Question 2 avec ensemble}{}% 11
-\BOOKMARK [2][-]{subsection.4.1}{Ensemble Tours}{section.4}% 12
-\BOOKMARK [2][-]{subsection.4.2}{Ensemble fous}{section.4}% 13
-\BOOKMARK [2][-]{subsection.4.3}{Ensemble cavaliers:}{section.4}% 14
-\BOOKMARK [2][-]{subsection.4.4}{Contrainte finale:}{section.4}% 15
-\BOOKMARK [1][-]{section.5}{Question 3}{}% 16
-\BOOKMARK [2][-]{subsection.5.1}{Lancement du programme}{section.5}% 17
-\BOOKMARK [2][-]{subsection.5.2}{Explication code}{section.5}% 18
-\BOOKMARK [2][-]{subsection.5.3}{Contrainte Tour}{section.5}% 19
-\BOOKMARK [2][-]{subsection.5.4}{Contrainte Fou}{section.5}% 20
-\BOOKMARK [2][-]{subsection.5.5}{Contrainte Cavalier}{section.5}% 21
-\BOOKMARK [2][-]{subsection.5.6}{Contrainte Vide}{section.5}% 22
-\BOOKMARK [2][-]{subsection.5.7}{Question Bonus}{section.5}% 23
-\BOOKMARK [1][-]{section.6}{Question 4}{}% 24
-\BOOKMARK [2][-]{subsection.6.1}{Contraintes}{section.6}% 25
-\BOOKMARK [2][-]{subsection.6.2}{Exemple d'utilisation}{section.6}% 26
-\BOOKMARK [1][-]{section.7}{Question 5}{}% 27
-\BOOKMARK [2][-]{subsection.7.1}{Contraintes CSP}{section.7}% 28
-\BOOKMARK [2][-]{subsection.7.2}{Partie impl\351mentation}{section.7}% 29
-\BOOKMARK [3][-]{subsubsection.7.2.1}{Parser}{subsection.7.2}% 30
-\BOOKMARK [3][-]{subsubsection.7.2.2}{Placements des cam\351ras}{subsection.7.2}% 31
-\BOOKMARK [3][-]{subsubsection.7.2.3}{Affichage de la solution}{subsection.7.2}% 32
-\BOOKMARK [3][-]{subsubsection.7.2.4}{Exemple}{subsection.7.2}% 33
+\BOOKMARK [1][-]{section.4}{Question 3}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{Lancement du programme}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{Explication code}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.3}{Contrainte Tour}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.4}{Contrainte Fou}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.5}{Contrainte Cavalier}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.6}{Contrainte Vide}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.7}{Question Bonus}{section.4}% 18
+\BOOKMARK [1][-]{section.5}{Question 4}{}% 19
+\BOOKMARK [2][-]{subsection.5.1}{Contraintes}{section.5}% 20
+\BOOKMARK [2][-]{subsection.5.2}{Exemple d'utilisation}{section.5}% 21
+\BOOKMARK [1][-]{section.6}{Question 5}{}% 22
+\BOOKMARK [2][-]{subsection.6.1}{Contraintes CSP}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.2}{Partie impl\351mentation}{section.6}% 24
+\BOOKMARK [3][-]{subsubsection.6.2.1}{Parser}{subsection.6.2}% 25
+\BOOKMARK [3][-]{subsubsection.6.2.2}{Placements des cam\351ras}{subsection.6.2}% 26
+\BOOKMARK [3][-]{subsubsection.6.2.3}{Affichage de la solution}{subsection.6.2}% 27
+\BOOKMARK [3][-]{subsubsection.6.2.4}{Exemple}{subsection.6.2}% 28
