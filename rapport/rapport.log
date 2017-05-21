@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.21)  21 MAY 2017 16:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.21)  21 MAY 2017 17:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -919,7 +919,7 @@ File: img/q4.png Graphic file (type png)
 Package pdftex.def Info: img/q4.png used on input line 405.
 (pdftex.def)             Requested size: 455.24411pt x 85.35904pt.
 
-Overfull \hbox (43.62187pt too wide) detected at line 419
+Overfull \hbox (43.62187pt too wide) detected at line 422
 \OML/cmm/m/it/10 C \OT1/cmr/m/n/10 = ((\OML/cmm/m/it/10 x[]; \OMS/cmsy/m/n/10 8
 \OML/cmm/m/it/10 i; j\OT1/cmr/m/n/10 (1 \OMS/cmsy/m/n/10 ^^T \OML/cmm/m/it/10 i
  \OMS/cmsy/m/n/10 ^^T \OML/cmm/m/it/10 n\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 :\OT1
@@ -941,33 +941,29 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.420 ...leq k < i), \exists b_{k,j} = 2)] \lor $$
+l.422 ... k \leq n), \exists b_{k,j} = 1)] \lor $$
                                                    <./img/q4.png>]
 <img/gridExample.png, id=437, 71.26625pt x 91.34125pt>
 File: img/gridExample.png Graphic file (type png)
 
 <use img/gridExample.png>
-Package pdftex.def Info: img/gridExample.png used on input line 435.
+Package pdftex.def Info: img/gridExample.png used on input line 438.
 (pdftex.def)             Requested size: 71.26605pt x 91.34102pt.
- <img/sol.png, id=438, 167.62625pt x 129.48375pt>
+ [10 <./img/gridExample.png>]
+<img/sol.png, id=443, 167.62625pt x 129.48375pt>
 File: img/sol.png Graphic file (type png)
-
-<use img/sol.png>
-Package pdftex.def Info: img/sol.png used on input line 450.
+ <use img/sol.png>
+Package pdftex.def Info: img/sol.png used on input line 453.
 (pdftex.def)             Requested size: 117.33755pt x 90.63799pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 453.
-[10 <./img/gridExample.png>] [11 <./img/sol.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 453.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 456.
+ [11 <./img/sol.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 456.
  (./rapport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 453.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 453.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 456.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 456.
 Package rerunfilecheck Info: File `rapport.out' has not changed.
 (rerunfilecheck)             Checksum: 5AC5DAC5E7AB9F4B47D8ECF2CFD84C8D;2106.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 453.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 456.
  ) 
 Here is how much of TeX's memory you used:
  10123 strings out of 493014
@@ -997,7 +993,7 @@ texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2016/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2016/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmti7.pfb>
-Output written on rapport.pdf (11 pages, 315064 bytes).
+Output written on rapport.pdf (11 pages, 315631 bytes).
 PDF statistics:
  567 PDF objects out of 1000 (max. 8388607)
  518 compressed objects within 6 object streams
