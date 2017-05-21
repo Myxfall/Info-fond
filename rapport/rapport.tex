@@ -438,38 +438,58 @@ $$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < j), \exists b_{i,k} = 4)] \}) $$
 \end{center}
 \end{figure}
 
-\par Une fois que le programme récupère ce fichier, il va récupérer tout d'abord les dimensions du musée sans compter les quatre mur de la pièce.  Une fois terminé, ces valeurs seront donnée aux attributs du programme. Une matrice \emph{grid} est ensuite crée.  Cette matrice représente la situation de la pièce du musée avec les murs interieur, et permettra ainsi au programme de placer les caméras aux bons endroits.
+\par Une fois que le programme récupère ce fichier, il va récupérer tout d'abord les dimensions du musée sans compter les quatre mur de la pièce.  Une fois terminé, ces valeurs seront donnée aux attributs du programme. Une matrice \emph{grid} est ensuite crée.  Cette matrice représente la situation de la pièce du musée avec les murs interieur, et permettra ainsi au programme de placer les caméras aux bons endroits. Voici un exemple de lancement:
+\begin{figure}[!h]
+\includegraphics[width=450px]{img/q5.png}
+
+\end{figure}
 
 \subsection{Placements des caméras}
 Maintenant que la matrice \emph{grid} à été initialiser, nous pouvons appliquer nos contraintes en fonction de chaque case de cette matrice. Nous faisons alors appel à \emph{minCamera()}, qui va parcourirs chaque case de notre matrice.  Si la case est différent de "*", c'est à dire un mur, alors nous allons appliquer nos contraintes. Pour ce faire nous initialisons un tableau qui va contenir toutes nos contraintes, ce tableau est \emph{contrainteTotal\_OR}. C'est ce tableau qui va permettre d'indiquer au solver, si une case est vide, alors elle est surveillé par au moins une caméra. Ensuite pour la case vide, il va falloir dire: il existe au moins une caméra Sud dans les cases au dessus de notre case vide, ou alors une caméra Nord dans les cases en dessous, ou alors une caméra Est dans les cases à gauche, ou une caméra Ouest dans les cases à droite.  Pour ce faire on crée à nouveau un tableau (\emph{existsCam\_OR}) qui va contenir ces contraintes. On parcours alors en croix les cases adjacentes à la case vide, en prenant soin de nous arrêter lorsque nous rencontrons un mur. Lors de ce parcours, nous ajoutons à notre tableau la contrainte arithmétique: case parcouru $=$ caméra visant notre case vide. Une fois le parcours en croix terminé, il suffit d'ajouter au tableau \emph{contrainteTotal\_OR} quatre contraintes indiquant que la case que nous examinons peut aussi être remplit par une caméra. Il ne reste plus qu'à poster les contraintes du tableau grâce à un \emph{post()} de notre tableau.
-\subsection{Contrainte camera nord}
-Pour ce qui est d'une camera nord, voici ce qu'on ajoute comme contrainte:
+
+\subsection{Contraintes camera}
+Pour ce qui contrainte pour une camera, voici un exemple de comment on génère une contrainte pour un type de camera, ici il s'agit pour une camera Nord:
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
-public void MinimizationCavalier(){
-	for (int l=0;l<this.n;l++){
-		for (int k=0;k<this.n;k++){
-			if (this.menace(l,k)!=null){ //si il existe une contrainte
-				this.menace(l,k).post();
-			}
-			else{
-				this.model.arithm(this.echequier[l][k], "=",1).post(); //sinon c'est une case occupe ->cavalier
-			}
-			this.sum=this.sum.add(this.echequier[l][k]).intVar();
-		}	
+[...]
+//camera N
+m = l;
+while(m < this.nbrLigne){
+	if(!this.grid[m][k].equals("*")){
+		Constraint contrainte_N = model.arithm(this.salle[m][k], "=", this.NORD);
+		existCam_OR.add(contrainte_N);
 	}
-	this.numCavalier.eq(sum).post();
-	this.model.setObjective(Model.MINIMIZE, this.numCavalier);
-	[...]
+	else{
+		m = 100; //etre sur qu'on va arreter
+		}
+	++m;
 }
+[...]
 \end{lstlisting}
+Pour les autres types de camera, c'est le meme principe. On parcours donc le plan de la salle et si une position n'est pas un mur alors on va ajouter les contraintes de camera: pour chaque position on regarde si il y a des camera Nord, Sud, Est et Ouest et ensuite on fait un OR de tout ca.
 
-		\subsubsection{Affichage de la solution}
-			Pour afficher la solution, il ne reste plus qu'à parcourirs le tableau contenant les différentes positions des caméras utilisé par le solver (\emph{this.salle}).  Ce tableau contient la structure de la salle, les cases vides, et le entiers correspondant au caméra et leur sens.
+Il ne s'agit ici pas en effet de la meilleur approche en programmation et certainement pas de la meilleure optimisation.
 
-		\subsubsection{Exemple}
-			\begin{figure}[h]
-			\begin{center}
-				\includegraphics[scale=0.7]{img/sol.png}
-			\end{center}
-			\end{figure}
+Afin de trouver le nombre minimal de camera, nous nous sommes dit que cela revient au meme de maximiser le nombre de case vide et donc de cases surveillé. Nous avons donc une contrainte supplementaire sur le nombre de cases vides :
+\begin{lstlisting}[language=Java,basicstyle=\tiny]
+[...]
+ArrayList<BoolVar> tab1dimension=new ArrayList<BoolVar>();
+for (int i=0;i<this.nbrLigne;i++){
+	for (int j=0;j<this.nbrColonne;j++){
+		tab1dimension.add(this.salle[i][j].eq(this.VIDE).boolVar());
+	}
+}
+BoolVar[] tableau= new BoolVar[this.nbrColonne*this.nbrLigne];
+model.sum(tab1dimension.toArray(tableau),"=", numV).post();
+[...]
+\end{lstlisting}
+Pour pouvoir conter le nombre de case vide nous ajoutons une contrainte sur toutes les case: chaque case doit etre vide et on test cette contrainte grace à un boolVar qui renverra true si la condition est repecté. Par la suite il nous suffit de compter le nombre de boolvar dans ce tableau et de l'associer a la variable IntVar $numV$ qui represente le nombre de case vide. Il nous suffira donc de maximizer ce nombre.
+
+\subsection{Affichage de la solution}
+\par Pour afficher la solution, il ne reste plus qu'à parcourir le tableau contenant les différentes positions des caméras utilisé par le solver (\emph{this.salle}).  Ce tableau contient la structure de la salle, les cases vides, et le entiers correspondant au caméra et leur sens. Voici un exemple de solution:
+\begin{figure}[!h]
+\includegraphics[width=450px]{img/q5.png}
+\end{figure}
+
+\section{Conclusion}
+Ce projet nous as permit de mieux comprendre comment Choco-Solveur fonctionne. Nous avons malgré tout eu un grand problème avec le manque de documentation pour les debutant de Choco, comment fonctionne Choco, comment utiliser
 \end{document}

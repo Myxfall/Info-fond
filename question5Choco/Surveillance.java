@@ -53,7 +53,7 @@ public class Surveillance {
 	 * @throws FileNotFoundException
 	 */
 	public void numberOfCharPerLine() throws FileNotFoundException{
-		BufferedReader bR= new BufferedReader(new FileReader(this.filename));
+		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
 		String currentLine;
 		try {
 			currentLine = bR.readLine();
@@ -69,7 +69,7 @@ public class Surveillance {
 	 * @throws FileNotFoundException
 	 */
 	public void numberOfLines() throws FileNotFoundException{
-		BufferedReader bR= new BufferedReader(new FileReader(this.filename));
+		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
 		int count=0;
 		String currentLine;
 		try {
@@ -91,7 +91,7 @@ public class Surveillance {
 		try {
 			this.numberOfCharPerLine();
 			this.numberOfLines();
-			BufferedReader bR= new BufferedReader(new FileReader(this.filename));
+			BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
 			currentLine=bR.readLine();
 			this.grid=new String[this.nbrLigne][this.nbrColonne];
 			int count=0;
@@ -184,14 +184,14 @@ public class Surveillance {
 				contrainteTotal_OR = new ArrayList<Constraint>();
 				
 				//vide and exist une camera
-				Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", 0);
+				Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", this.VIDE);
 				
 				existCam_OR = new ArrayList<Constraint>();
 				//camera S
 				int m = l;
 				while(m > 0){
 					if(!this.grid[m][k].equals("*")){
-						Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
+						Constraint contrainte_S = model.arithm(this.salle[m][k], "=", this.SUD);
 						existCam_OR.add(contrainte_S);
 					}
 					else{
@@ -203,7 +203,7 @@ public class Surveillance {
 				m = l;
 				while(m < this.nbrLigne){
 					if(!this.grid[m][k].equals("*")){
-						Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
+						Constraint contrainte_N = model.arithm(this.salle[m][k], "=", this.NORD);
 						existCam_OR.add(contrainte_N);
 					}
 					else{
@@ -215,7 +215,7 @@ public class Surveillance {
 				m = k;
 				while(m > 0){
 				if(!this.grid[l][m].equals("*")){
-						Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
+						Constraint contrainte_E = model.arithm(this.salle[l][m], "=", this.EST);
 						existCam_OR.add(contrainte_E);
 					}
 					else{
@@ -228,7 +228,7 @@ public class Surveillance {
 				m = k;
 				while(m < this.nbrColonne){
 					if(!this.grid[l][m].equals("*")){
-						Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
+						Constraint contrainte_O = model.arithm(this.salle[l][m], "=", this.OUEST);
 						existCam_OR.add(contrainte_O);
 					}
 					else{
@@ -241,15 +241,15 @@ public class Surveillance {
 				Constraint videCamera_AND = model.and(contrainte_vide, model.or(existCam_OR.toArray(new Constraint[]{})));
 				
 				contrainteTotal_OR.add(videCamera_AND);
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 1));
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 2));
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 3));
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 4));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.NORD));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.SUD));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.EST));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.OUEST));
 				
 				model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
 			}
 				else {
-					model.arithm(this.salle[l][k], "=", 5).post();
+					model.arithm(this.salle[l][k], "=", this.MUR).post();
 				}
 			
 			}
