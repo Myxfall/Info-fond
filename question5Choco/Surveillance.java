@@ -184,15 +184,14 @@ public class Surveillance {
 				contrainteTotal_OR = new ArrayList<Constraint>();
 				
 				//vide and exist une camera
-				Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", 0);
+				Constraint contrainte_vide = model.arithm(this.salle[l][k], "=", this.VIDE);
 				
 				existCam_OR = new ArrayList<Constraint>();
 				//camera S
 				int m = l;
 				while(m > 0){
-				//for(int m=0; m<l;  ++m){
 					if(!this.grid[m][k].equals("*")){
-						Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
+						Constraint contrainte_S = model.arithm(this.salle[m][k], "=", this.SUD);
 						existCam_OR.add(contrainte_S);
 					}
 					else{
@@ -203,9 +202,8 @@ public class Surveillance {
 				//camera N
 				m = l;
 				while(m < this.nbrLigne){
-				//for(int m=l; m<this.dimensionY; ++m){
 					if(!this.grid[m][k].equals("*")){
-						Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
+						Constraint contrainte_N = model.arithm(this.salle[m][k], "=", this.NORD);
 						existCam_OR.add(contrainte_N);
 					}
 					else{
@@ -216,9 +214,8 @@ public class Surveillance {
 				//camera E: regarde à droite
 				m = k;
 				while(m > 0){
-				//for(int m=0; m<k; ++m){
 				if(!this.grid[l][m].equals("*")){
-						Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
+						Constraint contrainte_E = model.arithm(this.salle[l][m], "=", this.EST);
 						existCam_OR.add(contrainte_E);
 					}
 					else{
@@ -230,9 +227,8 @@ public class Surveillance {
 				//camera O: regarde à gauche
 				m = k;
 				while(m < this.nbrColonne){
-				//for(int m=k; m<this.dimensionX; ++m){
 					if(!this.grid[l][m].equals("*")){
-						Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
+						Constraint contrainte_O = model.arithm(this.salle[l][m], "=", this.OUEST);
 						existCam_OR.add(contrainte_O);
 					}
 					else{
@@ -245,24 +241,18 @@ public class Surveillance {
 				Constraint videCamera_AND = model.and(contrainte_vide, model.or(existCam_OR.toArray(new Constraint[]{})));
 				
 				contrainteTotal_OR.add(videCamera_AND);
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 1));
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 2));
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 3));
-				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", 4));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.NORD));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.SUD));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.EST));
+				contrainteTotal_OR.add(model.arithm(this.salle[l][k], "=", this.OUEST));
 				
 				model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
 			}
-				//sinon c'est un mur
 				else {
-					model.arithm(this.salle[l][k], "=", 5).post();
+					model.arithm(this.salle[l][k], "=", this.MUR).post();
 				}
 			
 			}
-
-//			if(!existCam_OR.isEmpty()){
-//				model.or(existCam_OR.toArray(new Constraint[]{})).post();
-//				existCam_OR.clear();
-//			}
 		}
 
 		
