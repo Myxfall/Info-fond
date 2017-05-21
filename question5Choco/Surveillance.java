@@ -190,7 +190,6 @@ public class Surveillance {
 				//camera S
 				int m = l;
 				while(m > 0){
-				//for(int m=0; m<l;  ++m){
 					if(!this.grid[m][k].equals("*")){
 						Constraint contrainte_S = model.arithm(this.salle[m][k], "=", 2);
 						existCam_OR.add(contrainte_S);
@@ -203,7 +202,6 @@ public class Surveillance {
 				//camera N
 				m = l;
 				while(m < this.nbrLigne){
-				//for(int m=l; m<this.dimensionY; ++m){
 					if(!this.grid[m][k].equals("*")){
 						Constraint contrainte_N = model.arithm(this.salle[m][k], "=", 1);
 						existCam_OR.add(contrainte_N);
@@ -216,7 +214,6 @@ public class Surveillance {
 				//camera E: regarde à droite
 				m = k;
 				while(m > 0){
-				//for(int m=0; m<k; ++m){
 				if(!this.grid[l][m].equals("*")){
 						Constraint contrainte_E = model.arithm(this.salle[l][m], "=", 3);
 						existCam_OR.add(contrainte_E);
@@ -230,7 +227,6 @@ public class Surveillance {
 				//camera O: regarde à gauche
 				m = k;
 				while(m < this.nbrColonne){
-				//for(int m=k; m<this.dimensionX; ++m){
 					if(!this.grid[l][m].equals("*")){
 						Constraint contrainte_O = model.arithm(this.salle[l][m], "=", 4);
 						existCam_OR.add(contrainte_O);
@@ -252,17 +248,11 @@ public class Surveillance {
 				
 				model.or(contrainteTotal_OR.toArray(new Constraint[]{})).post();
 			}
-				//sinon c'est un mur
 				else {
 					model.arithm(this.salle[l][k], "=", 5).post();
 				}
 			
 			}
-
-//			if(!existCam_OR.isEmpty()){
-//				model.or(existCam_OR.toArray(new Constraint[]{})).post();
-//				existCam_OR.clear();
-//			}
 		}
 
 		
