@@ -1,3 +1,9 @@
+/**
+ * Author Rusu George, Romain Maximilien
+ */
+
+
+
 package question4Choco;
 
 import java.util.ArrayList;

@@ -1,3 +1,8 @@
+/**
+ * Author Rusu George, Romain Maximilien
+ */
+
+
 package allPiece;
 
 import java.util.ArrayList;
@@ -7,10 +12,18 @@ import org.chocosolver.solver.constraints.Constraint;
 
 public class Pion extends Piece{
 	
+	/**
+	 * Constructor
+	 * @param n la taille de la grille
+	 * @param model le model choco en question
+	 */
 	public Pion(int n,Model model){
 		super(n,"P",model);
 	}
-	
+	/**
+	 * fonction menace . Piece.menace(Piece)
+	 * @param pieceCible piece qui sera attaqué
+	 */
 	public Constraint Menace(Piece pieceCible){
 		Model model=this.getModel();
 		ArrayList<Constraint> pionAttaque=new ArrayList<Constraint>();

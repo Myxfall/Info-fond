@@ -1,3 +1,8 @@
+/**
+ * Author Rusu George, Romain Maximilien
+ */
+
+
 package question4Choco;
 
 import org.apache.commons.cli.CommandLine;

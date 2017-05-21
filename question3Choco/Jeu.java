@@ -1,3 +1,8 @@
+/**
+ * Author Rusu George, Romain Maximilien
+ */
+
+
 package question3Choco;
 
 import java.util.ArrayList;
@@ -18,6 +23,13 @@ public class Jeu {
 	private int f;
 	private int c;
 	
+	/**
+	 * Constructor
+	 * @param n la taille de la grille
+	 * @param t le nombre de tour
+	 * @param f le nombre de fou
+	 * @param c le nombre de cavalier
+	 */
 	public Jeu(int n,int t, int f, int c){
 		this.n=n;
 		this.t=t;
@@ -26,10 +38,13 @@ public class Jeu {
 		
 		
 	}
+	/**
+	 * Probleme d'independance
+	 */
 	public void independance(){
 		System.out.println("Probleme d'indepandance");
 		Model model=new Model("independance");
-		ArrayList<Piece> allPiece=new ArrayList<Piece>();
+		ArrayList<Piece> allPiece=new ArrayList<Piece>(); //ajout des piece dans cette liste
 		for (int i=0;i<this.t;i++){
 			Tour tour=new Tour(this.n,model);
 			allPiece.add(tour);
@@ -42,7 +57,7 @@ public class Jeu {
 			Cavalier cavalier=new Cavalier(this.n,model);
 			allPiece.add(cavalier);
 		}
-		int caseVide=(this.n*this.n)-(this.t+this.c+this.f);
+		int caseVide=(this.n*this.n)-(this.t+this.c+this.f); //nombre de case vide pour les position (unicité)
 		for (int i=0;i<caseVide;i++){
 			Vide vide=new Vide(this.n,model);
 			allPiece.add(vide);
@@ -50,14 +65,14 @@ public class Jeu {
 		for (int l=0;l<this.n*this.n;l++){
 			for (int k=0;k<this.n*this.n;k++){
 				if (l!=k){
-					Piece pieceAttaque=allPiece.get(l);
-					Piece pieceSubit=allPiece.get(k);
+					Piece pieceAttaque=allPiece.get(l); //premiere piece
+					Piece pieceSubit=allPiece.get(k); //deuxieme piece
 					
-					Constraint unique=pieceAttaque.unique(pieceSubit);
-					unique.post();
+					Constraint unique=pieceAttaque.unique(pieceSubit); 
+					unique.post(); //unicite
 					
 					if ((pieceAttaque.getType()!="*") && (pieceSubit.getType()!="*")){
-						Constraint attaque= model.not(pieceAttaque.Menace(pieceSubit));
+						Constraint attaque= model.not(pieceAttaque.Menace(pieceSubit)); //inverse de la domination
 						attaque.post();
 					}
 				}
@@ -72,7 +87,9 @@ public class Jeu {
 		    System.out.println("Pas de solution trouvée.");
 		}
 	}
-		
+	/**
+	 * Probleme de domination
+	 */
 	public void domination(){
 		System.out.println("Probleme de domination");
 		Model model=new Model("domination");
@@ -106,13 +123,13 @@ public class Jeu {
 					Constraint unique=pieceAttaque.unique(pieceSubit);
 					unique.post();
 					
-					if ((pieceAttaque.getType()=="*") && (pieceSubit.getType()!="*")){
-	
-						Constraint attaque = pieceSubit.Menace(pieceAttaque);
+					if ((pieceAttaque.getType()=="*") && (pieceSubit.getType()!="*")){ 
+						//une piece vide ne peut pas attaquer
+						//une piece vide ne peut qu'être attaquer
+						Constraint attaque = pieceSubit.Menace(pieceAttaque); //constrainte domination
 						OR_contraintes.add(attaque);
 					}
-					//if (((pieceAttaque.getType()=="T") && (pieceSubit.getType()=="F")) || (pieceAttaque.getType()=="T" && pieceSubit.getType()=="C") || (pieceAttaque.getType()=="F" && pieceSubit.getType()=="C")){
-					if ((pieceAttaque.getType()=="T") && (pieceSubit.getType()=="F")){
+					if ((pieceAttaque.getType()=="T") && (pieceSubit.getType()=="F")){ //gestion obstacle Tour et Fou
 						Constraint attaque = model.not(pieceAttaque.Menace(pieceSubit));
 						OR_contraintes.add(attaque);
 					}
@@ -132,7 +149,10 @@ public class Jeu {
 		    System.out.println("Pas de solution trouvée.");
 		}
 	}
-	
+	/**
+	 * methode d'affichage
+	 * @param allPiece toutes les pieces du jeu
+	 */
 	public void printingBoard(ArrayList<Piece> allPiece){
 		String[][] printingBoard=new String[this.n][this.n];
 		for (int i=0;i<allPiece.size();i++){

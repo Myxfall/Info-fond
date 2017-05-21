@@ -1,3 +1,8 @@
+/**
+ * Author Rusu George, Romain Maximilien
+ */
+
+
 package allPiece;
 
 import java.util.ArrayList;
@@ -6,11 +11,18 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
 
 public class Cavalier extends Piece{
-	
+	/**
+	 * Constructor
+	 * @param n la taille de la grille
+	 * @param model le model choco en question
+	 */
 	public Cavalier(int n,Model model){
 		super(n,"C",model);
 	}
-	
+	/**
+	 * fonction menace . Piece.menace(Piece)
+	 * @param pieceCible piece qui sera attaqué
+	 */
 	public Constraint Menace(Piece pieceCible){
 		Model model=this.getModel();
 		ArrayList<Constraint> cavalierAttaque=new ArrayList<Constraint>();

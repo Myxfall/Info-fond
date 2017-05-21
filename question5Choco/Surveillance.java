@@ -1,3 +1,7 @@
+/**
+ * Author Rusu George, Romain Maximilien
+ */
+
 package question5Choco;
 
 import java.io.BufferedReader;
