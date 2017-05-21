@@ -347,37 +347,60 @@ public Constraint menace(int ligne,int colonne){
 		Constraint menace=this.model.arithm(this.echequier[ligne-1][colonne-2], "!=", this.echequier[ligne][colonne]);
 		cavalierAttaque.add(menace);
 	}
-		
-		if ((ligne+2<this.n) && (colonne+1<this.n)){
-			//i+2 j+1
-			Constraint menace=this.model.arithm(this.echequier[ligne+2][colonne+1], "!=", this.echequier[ligne][colonne]);
-			cavalierAttaque.add(menace);
-		}
-		
-		if ((ligne+2<this.n) && (colonne-1>=0)){
-			//i+2 j-1
-			Constraint menace=this.model.arithm(this.echequier[ligne+2][colonne-1], "!=",this.echequier[ligne][colonne]);
-			cavalierAttaque.add(menace);
-		}
-		
-		if ((ligne-2>=0) && (colonne+1<this.n)){
-			//i-2 j+1
-			Constraint menace=this.model.arithm(this.echequier[ligne-2][colonne+1], "!=",this.echequier[ligne][colonne]);
-			cavalierAttaque.add(menace);
-		}
-		if ((ligne-2>=0) && (colonne-1>=0)){
-			//i-2 j-1
-			Constraint menace=this.model.arithm(this.echequier[ligne-2][colonne-1], "!=", this.echequier[ligne][colonne]);
-			cavalierAttaque.add(menace);
-		}
-		if (!cavalierAttaque.isEmpty()){
-			return this.model.or(cavalierAttaque.toArray(new Constraint[]{}));
-		}
-		return null;
+	//i+2 j+1	
+	if ((ligne+2<this.n) && (colonne+1<this.n)){
+		Constraint menace=this.model.arithm(this.echequier[ligne+2][colonne+1], "!=", this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	//i+2 j-1
+	if ((ligne+2<this.n) && (colonne-1>=0)){
+		Constraint menace=this.model.arithm(this.echequier[ligne+2][colonne-1], "!=",this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	//i-2 j+1
+	if ((ligne-2>=0) && (colonne+1<this.n)){
+		Constraint menace=this.model.arithm(this.echequier[ligne-2][colonne+1], "!=",this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	//i-2 j-1
+	if ((ligne-2>=0) && (colonne-1>=0)){
+		Constraint menace=this.model.arithm(this.echequier[ligne-2][colonne-1], "!=", this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	if (!cavalierAttaque.isEmpty()){
+		return this.model.or(cavalierAttaque.toArray(new Constraint[]{}));
+	}
+	return null;
 		
 	}
 \end{lstlisting}
 
+Ce que nous fesons ici c'est tout simplement dire que pour chaque case, la case attaquante respective, donc la case où doit se trouver un cavalier doit etre differente d'elle meme. En effet nous avons que deux valeurs dans le domaines de chaque cases ce qui nous laisse l'opportunité de jouer avec la difference entre la case cible et cèlle qui attaque.
+
+Voici comment nous ajoutons nos contraintes et comment nous definison la variable a minimiser:
+\begin{lstlisting}[language=Java,basicstyle=\tiny]
+public void MinimizationCavalier(){
+	for (int l=0;l<this.n;l++){
+		for (int k=0;k<this.n;k++){
+			if (this.menace(l,k)!=null){
+				this.menace(l,k).post();
+			}
+			else{
+				this.model.arithm(this.echequier[l][k], "=",1).post();
+			}
+			this.sum=this.sum.add(this.echequier[l][k]).intVar();
+		}	
+	}
+	this.numCavalier.eq(sum).post();
+	this.model.setObjective(Model.MINIMIZE, this.numCavalier);
+	[...]
+}
+\end{lstlisting}
+
+Puisque a nouveau si une case contient un cavalier, sa valeur sera egale a 1 ou 0 dans le cas d'une case vide, nous ajoutons la contrainte que la somme de toutes les cases doit etre egale au nombre de cavalier qu'on doit minimiser.
+
+\subsection{Exemple d'utilisation}
+Voici un exemple d'utilisation:
 \section{Question 5}
 	Nous avons un musée qui est reprséenté par une grille de $n * m$\\
 	\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq m)\}$\\

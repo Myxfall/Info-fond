@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.21)  21 MAY 2017 16:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.21)  21 MAY 2017 16:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -793,13 +793,13 @@ LaTeX Info: Redefining \nameref on input line 17.
  [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
- [4] <img/q3.png, id=169, 568.1225pt x 102.3825pt>
+ [4] <img/q3.png, id=199, 568.1225pt x 102.3825pt>
 File: img/q3.png Graphic file (type png)
 
 <use img/q3.png>
 Package pdftex.def Info: img/q3.png used on input line 138.
 (pdftex.def)             Requested size: 455.24411pt x 82.04358pt.
- <img/q31.png, id=171, 566.115pt x 103.38625pt>
+ <img/q31.png, id=201, 566.115pt x 103.38625pt>
 File: img/q31.png Graphic file (type png)
 
 <use img/q31.png>
@@ -885,27 +885,27 @@ Overfull \hbox (59.26678pt too wide) in paragraph at lines 347--348
  []
 
 
-Overfull \hbox (91.93414pt too wide) in paragraph at lines 353--354
+Overfull \hbox (59.26678pt too wide) in paragraph at lines 352--353
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (87.85072pt too wide) in paragraph at lines 359--360
+Overfull \hbox (55.18336pt too wide) in paragraph at lines 357--358
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (87.85072pt too wide) in paragraph at lines 365--366
+Overfull \hbox (55.18336pt too wide) in paragraph at lines 362--363
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (91.93414pt too wide) in paragraph at lines 370--371
+Overfull \hbox (59.26678pt too wide) in paragraph at lines 367--368
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 [8]
-Overfull \hbox (43.62187pt too wide) detected at line 391
+Overfull \hbox (43.62187pt too wide) detected at line 411
 \OML/cmm/m/it/10 C \OT1/cmr/m/n/10 = ((\OML/cmm/m/it/10 x[]; \OMS/cmsy/m/n/10 8
 \OML/cmm/m/it/10 i; j\OT1/cmr/m/n/10 (1 \OMS/cmsy/m/n/10 ^^T \OML/cmm/m/it/10 i
  \OMS/cmsy/m/n/10 ^^T \OML/cmm/m/it/10 n\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 :\OT1
@@ -922,8 +922,77 @@ m/m/it/10 ; \OMS/cmsy/m/n/10 9\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 = 1)]\OMS/cm
 sy/m/n/10 _
  []
 
+[9]
 
-LaTeX Warning: File `figs/gridExample.png' not found on input line 407.
+LaTeX Warning: File `figs/gridExample.png' not found on input line 427.
 
 
-./rapport.tex:407: Package pdftex.def Error: File `figs/gridExa
+./rapport.tex:427: Package pdftex.def Error: File `figs/gridExample.png' not fo
+und.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.427 				\includegraphics{figs/gridExample.png}
+                                                
+? 
+
+LaTeX Warning: File `figs/sol.png' not found on input line 442.
+
+
+./rapport.tex:442: Package pdftex.def Error: File `figs/sol.png' not found.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.442 ...\includegraphics[scale=0.7]{figs/sol.png}
+                                                  
+? 
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 445.
+[10]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 445.
+ (./rapport.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 445.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 445.
+Package rerunfilecheck Info: File `rapport.out' has not changed.
+(rerunfilecheck)             Checksum: 959AA3A93F5603B0270024276A8895B4;2035.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 445.
+ ) 
+Here is how much of TeX's memory you used:
+ 10108 strings out of 493014
+ 143551 string characters out of 6133351
+ 323757 words of memory out of 5000000
+ 13280 multiletter control sequences out of 15000+600000
+ 10849 words of font info for 39 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 29i,8n,42p,1581b,1889s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx5.pfb></
+usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></
+usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/
+local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
+cal/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
+l/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/
+texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/te
+xlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texli
+ve/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/
+2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/201
+6/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/texlive/2016
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2016/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2016/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2016/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/local/texlive/2016/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on rapport.pdf (10 pages, 314078 bytes).
+PDF statistics:
+ 554 PDF objects out of 1000 (max. 8388607)
+ 511 compressed objects within 6 object streams
+ 240 named destinations out of 1000 (max. 500000)
+ 267 words of extra memory for PDF output out of 10000 (max. 10000000)
+

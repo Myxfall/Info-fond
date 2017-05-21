@@ -2,8 +2,6 @@
  * Author Rusu George, Romain Maximilien
  */
 
-
-
 package question4Choco;
 
 import java.util.ArrayList;
@@ -22,7 +20,10 @@ public class MinCavalier {
 	private IntVar[][] echequier;
 	private int numMinCavalier;
 	private String[][] Solution;
-	
+	/**
+	 * Constructor
+	 * @param n taille de la grille
+	 */
 	public MinCavalier(int n){
 		this.n=n;
 		this.model= new Model("MinimisationCavalierDomination");
@@ -33,6 +34,9 @@ public class MinCavalier {
 		this.Solution=new String[this.n][this.n];
 		
 	}
+	/**
+	 * fonction d'affichage
+	 */
 	private void printingBoard(){
 		String line;
 		System.out.print(this.numMinCavalier+"\n");
@@ -44,7 +48,9 @@ public class MinCavalier {
 			System.out.println(line);
 		}
 	}
-	
+	/**
+	 * fonction qui permet de sauver la derniere solution 
+	 */
 	private void setSolution(){
 		//String line;
 		this.numMinCavalier=numCavalier.getValue();
@@ -59,7 +65,12 @@ public class MinCavalier {
 			}				
 		}
 	}
-	
+	/**
+	 * fonction menace , génére toutes les contraintes
+	 * @param ligne numero de la ligne de la case a traiter
+	 * @param colonne numero de la colonne de la case a traiter
+	 * @return un or des contraintes
+	 */
 	public Constraint menace(int ligne,int colonne){
 		ArrayList<Constraint> cavalierAttaque=new ArrayList<Constraint>();
 		
@@ -116,7 +127,9 @@ public class MinCavalier {
 		
 	}
 	
-	
+	/**
+	 * fonction qui s'occupe de minimiser cela
+	 */
 	public void MinimizationCavalier(){
 		for (int l=0;l<this.n;l++){
 			for (int k=0;k<this.n;k++){
