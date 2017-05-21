@@ -253,6 +253,10 @@ public class Surveillance {
 				}
 			
 			}
+			if (!existCam_OR.isEmpty()){
+				model.or(existCam_OR.toArray(new Constraint[]{})).post();
+				existCam_OR.clear();
+			}
 		}
 
 		
