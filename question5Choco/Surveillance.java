@@ -29,7 +29,7 @@ public class Surveillance {
 	private IntVar[][] salle;
 	private int numVide;
 	private String[][] solution;
-	
+	private ArrayList<Constraint> videEntre;
 	
 	public Surveillance(String filename){
 		this.filename=filename;
@@ -37,6 +37,7 @@ public class Surveillance {
 		this.model= new Model("MinimisationCavalierDomination");
 		this.salle = model.intVarMatrix("salle",this.nbrLigne,this.nbrColonne,0,5);
 		this.solution=new String[this.nbrLigne+2][this.nbrColonne+2];
+		this.videEntre = new ArrayList<Constraint>();
 		
 		
 	}
@@ -139,7 +140,7 @@ public class Surveillance {
 	public Constraint cameraNord(int ligne, int colonne){
 		ArrayList<Constraint> cameraNord=new ArrayList<Constraint>();
 		for (int l=ligne; l<this.nbrLigne;l++){
-			ArrayList<Constraint> videEntre = new ArrayList<Constraint>();
+			this.videEntre.clear();
 			for (int k=ligne; k<l ;k++){
 				videEntre.add(model.arithm(this.salle[k][colonne], "=", this.VIDE));
 			}
@@ -155,7 +156,7 @@ public class Surveillance {
 	public Constraint cameraSud(int ligne, int colonne){
 		ArrayList<Constraint> cameraSud=new ArrayList<Constraint>();
 		for (int l=ligne; l>0;l--){
-			ArrayList<Constraint> videEntre = new ArrayList<Constraint>();
+			this.videEntre.clear();
 			for (int k=ligne; k>l ;k--){
 				videEntre.add(model.arithm(this.salle[k][colonne], "=", this.VIDE));
 			}
@@ -170,7 +171,7 @@ public class Surveillance {
 	public Constraint cameraEst(int ligne, int colonne){
 		ArrayList<Constraint> cameraEst=new ArrayList<Constraint>();
 		for (int l=colonne; l>0;l--){
-			ArrayList<Constraint> videEntre = new ArrayList<Constraint>();
+			this.videEntre.clear();
 			for (int k=colonne; k>l ;k--){
 				videEntre.add(model.arithm(this.salle[ligne][k], "=", this.VIDE));
 			}
@@ -186,7 +187,7 @@ public class Surveillance {
 	public Constraint cameraOuest(int ligne, int colonne){
 		ArrayList<Constraint> cameraOuest=new ArrayList<Constraint>();
 		for (int l=colonne; l<this.nbrColonne;l++){
-			ArrayList<Constraint> videEntre = new ArrayList<Constraint>();
+			this.videEntre.clear();
 			for (int k=colonne; k<l ;k++){
 				videEntre.add(model.arithm(this.salle[ligne][k], "=", this.VIDE));
 			}
