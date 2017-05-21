@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.Constraint;
+import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 
 
@@ -200,10 +201,6 @@ public class Surveillance {
 	
 	public void minCamera(){
 		IntVar numV=model.intVar("sumVide", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numN=model.intVar("sumNord", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numS=model.intVar("sumSud", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numE=model.intVar("sumEst", 0, this.nbrColonne*this.nbrLigne);
-		IntVar numO=model.intVar("sumOuest", 0, this.nbrColonne*this.nbrLigne);
 		
 		for (int l=0;l<this.nbrLigne;l++){
 			for (int k=0;k<this.nbrColonne;k++){
@@ -215,6 +212,7 @@ public class Surveillance {
 					this.salle[l][k].eq(this.MUR).post();
 				}
 			}
+		}
 		for (int i=0;i<this.nbrLigne;i++){
 			for (int j=0;j<this.nbrColonne;j++){
 				ArrayList<Constraint> existCamera=new ArrayList<Constraint>();
@@ -224,28 +222,18 @@ public class Surveillance {
 				existCamera.add(this.cameraOuest(i, j));
 				model.ifThen(model.arithm(this.salle[i][j],"=", this.VIDE), model.or(existCamera.toArray(new Constraint[]{})));
 			}
-			model.count(this.VIDE, this.salle[l], numV).post();
-			/*model.count(this.NORD, this.salle[l], numN).post();
-			model.count(this.SUD, this.salle[l],numS).post();
-			model.count(this.EST, this.salle[l], numE).post();
-			model.count(this.OUEST, this.salle[l], numO).post();
-			this.sum=this.sum.add(numN).intVar();
-			this.sum=this.sum.add(numS).intVar();
-			this.sum=this.sum.add(numE).intVar();
-			this.sum=this.sum.add(numO).intVar();*/
-		}
-			/*model.count(1, this.salle[l], numN).post();
-			model.count(2, this.salle[l],numS).post();
-			model.count(3, this.salle[l], numE).post();
-			model.count(4, this.salle[l], numO).post();
-			this.sum=this.sum.add(numN).intVar();
-			this.sum=this.sum.add(numS).intVar();
-			this.sum=this.sum.add(numE).intVar();
-			this.sum=this.sum.add(numO).intVar();*/
-			//model.sum(new IntVar[]{numN,numS,numE,numO},"+",this.sum);
-		}
-
+			//model.count(this.VIDE, this.salle[i], numV).post();
 		
+		}
+		ArrayList<BoolVar> tab1dimension=new ArrayList<BoolVar>();
+		for (int i=0;i<this.nbrLigne;i++){
+			for (int j=0;j<this.nbrColonne;j++){
+				tab1dimension.add(this.salle[i][j].eq(this.VIDE).boolVar());
+			}
+		}
+		BoolVar[] tableau= new BoolVar[this.nbrColonne*this.nbrLigne];
+		
+		model.sum(tab1dimension.toArray(tableau),"=", numV).post();
 		//this.numCamera.eq(this.sum).post();
 		this.model.setObjective(Model.MAXIMIZE, numV);
 		Solver solver = model.getSolver();
