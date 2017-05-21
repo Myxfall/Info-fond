@@ -129,8 +129,8 @@ $ D = \{Vide, tour, fous, cavalier \} $\\
 	$$ C = (e_T \cap e_{couple,T_{colonnes}} \cap e_{couple,T_{lignes}}) \cup (e_F \cap e_{couple,F_{diag1}} \cap e_{couple,F_{diag2}}) \cup e_{C,(i,j)}$$
 
 \section{Question 3}
-\par Pour cette question nous avons du implementer les deux problèmes décrit ci-dessus. Nous sommes tout d'abord parti sur le fait de faire tout dans une fonction. Nous nous sommes vites rendu compte que cela n'était pas du tout visible est très difficile à debugger. Après de nombreuse recherche et de nombreuse question posé à l'assistant, nous avons eu le déclic que le problème de domination est l'inverse de l'indépendance. En effet, si une piece menace une autre, il s'agit du problème de domination et inversement pour le problème d'indépendance, une piece ne doit pas menacer une autre. La negation fait donc son apparition.
-\par Pour pouvoir utiliser ce concept avec la negation, nous avions du changer notre premier mode de representation à savoir celui avec un échiquier de taille $n*n$ où chaque case peut-être soit une Tour soit un Cavalier soit un Fou soit un Vide. Nous nous sommes orienté vers la programmation Orienté Objet. Nous avons decider que puisque on va manipuler des pieces, on pourrait créer une classe Piece qui représenterai une piece du Jeu. Mais chaque type de piece a son propre espace de jeu ( ses propres contraintes sur les mouvements), nous avons donc du faire de cette classe Piece une classe abstraite afin de pouvoir pour chaque type redéfinir son espace de jeu.
+\par Pour cette question nous avons du implementer les deux problèmes décrit ci-dessus. Nous sommes tout d'abord parti sur le fait d'utiliser une matrice de IntVar où chaque case prendrait un numero distinct. Nous nous sommes vites rendu compte que cela n'était pas du tout lisible est très difficile à debugger. Après de nombreuse recherches et de nombreuse questions posées à l'assistant, nous avons eu le déclic que le problème de domination est l'inverse de l'indépendance. En effet, si une pièce menace une autre, il s'agit du problème de domination et inversement pour le problème d'indépendance, une pièce ne doit pas menacer une autre. La negation fait donc son apparition.
+\par Pour pouvoir utiliser ce concept avec la negation, nous avions du changer notre premier mode de representation à savoir celui avec un échiquier de taille $n*n$ où chaque case peut-être soit une Tour, soit un Cavalier, soit un Fou, soit un Vide. Nous nous sommes orienté vers la programmation Orienté Objet. Nous avons decider que puisque on va manipuler des pièces, on pourrait créer une classe Piece qui représenterai une pièce du Jeu. Mais chaque type de pièce a son propre espace de jeu ( ses propres contraintes sur les mouvements), nous avons donc du faire de cette classe Piece une classe abstraite afin de pouvoir pour chaque type redéfinir son espace de jeu.
 	
 \subsection{Lancement du programme}
 \par Lors du lancement du jeu, il faut choisir les paramètres en ligne de commande de la manière suivante :
@@ -143,8 +143,8 @@ $ D = \{Vide, tour, fous, cavalier \} $\\
 	\item[-] -i si c'est le problème d'indépendance
 	\item[-] -d si c'est le problème de domination
 	\item[-] -n 4 pour la taille de l'échiquier (ici nous avons défini une taille de 4)
-	\item[-] -t 2 pour le nombre de piece Tour (ici 2)
-	\item[-] -f 1 pour le nombre de piece Fou (ici 1)
+	\item[-] -t 2 pour le nombre de pièce Tour (ici 2)
+	\item[-] -f 1 pour le nombre de pièce Fou (ici 1)
 	\item[-] -c 2 pour le nombre de Cavalier (ici 2)
 \end{enumerate}
 
@@ -154,10 +154,10 @@ Encore un exemple d'utilisation, cette fois-ci pour le problème de domination:
   \caption{Exemple de lancement problème domination}
 \end{figure}
 \subsection{Explication code}
-\par Pour cette question nous avons créé un package "allPiece" qui va contenir les classes lié a une Piece et un package "question3Choco" qui est le package où se trouve la classe "Main" principale ainsi que la classe "Jeu" qui lance le tout. 
+\par Pour cette question nous avons créé un package "allPiece" qui va contenir les classes lié a une pièce et un package "question3Choco" qui est le package où se trouve la classe "Main" principale ainsi que la classe "Jeu" qui lance le tout. 
 
-\par Le fonctionnement se passe ainsi, pour n'importe quel type de problème, on va instancier le nombre exact de Piece de type Tour, Cavalier, Fou et Vide. Nous allons mettre chacun de ces objets dans un tableau et on va parcourir ce tableau de telle manière à jouer avec chaque piece. Nous vérifions bien le fait qu'on ne traite pas la même piece avec elle même (auto menacement). Nous avons aussi une contraintes concernant la position de chaque pieces, deux pieces ne peuvent pas avoir la meme position puisqu'elle doivent etre distincte.
-\par Si le problème est une celui de l'indépendance, une piece ne peut pas s'auto menacer et ne peut pas menacer les autres pieces non Vide. Voici le pseudo code:
+\par Le fonctionnement se passe ainsi, pour n'importe quel type de problème, on va instancier le nombre exact de pièce de type Tour, Cavalier, Fou et Vide. Nous allons mettre chacun de ces objets dans un tableau et on va parcourir ce tableau de telle manière à jouer avec chaque pièce. Nous vérifions bien le fait qu'on ne traite pas la même pièce avec elle même (auto menacement). Nous avons aussi une contraintes concernant la position de chaque pièces, deux pièces ne peuvent pas avoir la meme position puisqu'elle doivent etre distincte.
+\par Si le problème est une celui de l'indépendance, une pièce ne peut pas s'auto menacer et ne peut pas menacer les autres pièces non Vide. Voici le pseudo code:
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
 if (l!=k){ //si pas la meme piece
 	Piece pieceAttaque=allPiece.get(l); //premiere piece
@@ -200,7 +200,7 @@ if (l!=k){ //si pas meme piece
 \par Au niveau des contraintes, on fait un OR de toutes les contraintes dans les deux cas de figures.
 
 \subsection{Contrainte Tour}
-\par Regardons à present la classe Tour du package allPiece. Les contraintes pour dire qu'une Tour menace une piece sont tres simple. Regadons d'abord le pseudo code:
+\par Regardons à present la classe Tour du package allPiece. Les contraintes pour dire qu'une Tour menace une pièce sont tres simple. Regadons d'abord le pseudo code:
 
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
 public Constraint Menace(Piece pieceCible){
@@ -210,9 +210,9 @@ public Constraint Menace(Piece pieceCible){
 	return model.or(memeLigne,memeColonne);
 }
 \end{lstlisting}
- En d'autres termes, nous disons tout simplement qu'une piece ne peut pas avoir la meme ligne ou la meme colonne qu'une piece tour si elle veut ne pas etre menacé par celle-ci.
+ En d'autres termes, nous disons tout simplement qu'une pièce ne peut pas avoir la meme ligne ou la meme colonne qu'une pièce tour si elle veut ne pas etre menacé par celle-ci.
 \subsection{Contrainte Fou}
-\par Regardons la classe Fou du package allPiece pour comprendre comment fonctionne les contraintes pour le type de piece Fou.
+\par Regardons la classe Fou du package allPiece pour comprendre comment fonctionne les contraintes pour le type de pièce Fou.
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
 public Constraint Menace(Piece pieceCible){
  Model model=this.getModel();
@@ -223,10 +223,10 @@ public Constraint Menace(Piece pieceCible){
 }
 \end{lstlisting}
 
-Pour cette contrainte nous nous basons sur ce que le professeur a donné en cours concernant le jeu des 8 reines. Verifier qu'une piece a la meme diagonale qu'une autre revient a faire $|i-k|=|j-l|$ avec $(i,j)$ les coordonne de la premier piece et $(k,l)$ les coordonne de la seconde piece.
+Pour cette contrainte nous nous basons sur ce que le professeur a donné en cours concernant le jeu des 8 reines. Verifier qu'une pièce a la meme diagonale qu'une autre revient a faire $|i-k|=|j-l|$ avec $(i,j)$ les coordonne de la premier pièce et $(k,l)$ les coordonne de la seconde pièce.
 
 \subsection{Contrainte Cavalier}
-Pour ce dernier type de piece, procedons de la meme maniere. Le pseudo code:
+Pour ce dernier type de pièce, procedons de la meme maniere. Le pseudo code:
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
 public Constraint Menace(Piece pieceCible){
 	Model model=this.getModel();
@@ -276,17 +276,17 @@ public Constraint Menace(Piece pieceCible){
 }
 \end{lstlisting}
 
-Ce qu'on fait ici c'est tout simplement dire que pour un cavalier, la piece qui est menacé par ce cavalier doit se trouver à la position du saute du cavalier.
+Ce qu'on fait ici c'est tout simplement dire que pour un cavalier, la pièce qui est menacé par ce cavalier doit se trouver à la position du saute du cavalier.
 
 \subsection{Contrainte Vide}
-Nous nous sommes rendu compte qu'on a besoin de cette classe juste pour certaintes fonctionne comme l'affichage et comme la verification qu'une piece qui doit attaque ou qui se fait attaquer n'est pas une piece vide. Il n'y a donc aucun intérêt a montrer les contraintes dans ce cas puisqu'il ne renvoi qu'un null, on n'utilise jamais cette fonction menace pour ce type de piece mais puisque nous avons choisi de faire une classe abstraite pour toutes les pieces, il a été nécessaire de devoir redéfinir cette méthode ici.
+Nous nous sommes rendu compte qu'on a besoin de cette classe juste pour certaintes fonctionne comme l'affichage et comme la verification qu'une pièce qui doit attaque ou qui se fait attaquer n'est pas une pièce vide. Il n'y a donc aucun intérêt a montrer les contraintes dans ce cas puisqu'il ne renvoi qu'un null, on n'utilise jamais cette fonction menace pour ce type de pièce mais puisque nous avons choisi de faire une classe abstraite pour toutes les pièces, il a été nécessaire de devoir redéfinir cette méthode ici.
 
-Ce qui ne faut pas oublier de mentionner c'est que cette classe nous sert également pour les positions. En effet le fait de verifier a chaque fois que chaque piece est distincte oblige l'utilisation des pieces Vides qui ont, elles aussi une position.
+Ce qui ne faut pas oublier de mentionner c'est que cette classe nous sert également pour les positions. En effet le fait de verifier a chaque fois que chaque pièce est distincte oblige l'utilisation des pièces Vides qui ont, elles aussi une position.
 
 \subsection{Question Bonus}
-\par Pour cette question bonus, il nous a été demander de pouvoir laisser le choix a un utilisateur de définir lui meme un type de piece. Pour cela nous avons simuler un utilisateur qui creer une classe Pion. Cette classe tout comme les autres pieces herite de la classe abstraite Piece et doit definir imperativement la methode: \textit{public Constraint Menace(Piece pieceCible)\{\}}
+\par Pour cette question bonus, il nous a été demander de pouvoir laisser le choix a un utilisateur de définir lui meme un type de pièce. Pour cela nous avons simuler un utilisateur qui creer une classe Pion. Cette classe tout comme les autres pièces herite de la classe abstraite Piece et doit definir imperativement la methode: \textit{public Constraint Menace(Piece pieceCible)\{\}}
 
-Voici ce que nous avons defini pour le type de piece Pion:
+Voici ce que nous avons defini pour le type de pièce Pion:
 
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
 public Constraint Menace(Piece pieceCible){
@@ -316,8 +316,67 @@ public Constraint Menace(Piece pieceCible){
 }
 \end{lstlisting}
 
-Au echec le pion peut aller dans une seule direction, nous avons voulu dresser le cas ou c'est un pion qui par dans toutes les directions. Pour pouvoir faire fonctionner ce Pion, l'utilisateur devra modifier le fichier Main.java afin d'ajouter la possibilité de specifier le nombre de Pion et d'utiliser ce nombre dans la classe Jeu.java afin de creer le nombre d'instance necessaire et de les ajouter dans le tableau avec toutes les pieces. Par la suite il pourra tester son programme avec le nouveau type de piece ajouté.
+Au echec le pion peut aller dans une seule direction, nous avons voulu dresser le cas ou c'est un pion qui par dans toutes les directions. Pour pouvoir faire fonctionner ce Pion, l'utilisateur devra modifier le fichier Main.java afin d'ajouter la possibilité de specifier le nombre de Pion et d'utiliser ce nombre dans la classe Jeu.java afin de creer le nombre d'instance necessaire et de les ajouter dans le tableau avec toutes les pièces. Par la suite il pourra tester son programme avec le nouveau type de pièce ajouté.
 \section{Question 4}
+\par Pour cette question nous avons dut implementer une programme qui pour une grille de taille n va nous donner le nombre minimal de cavalier afin que le problème de domination\footnote{soit une case est occupé soit elle est menacé} soit respecté. Nous sommes parti sur une matrice de IntVar de taille $n*n$ avec pour chaque case un domaine compris entre 0 et 1. Nous avons defini au prealable qu'une case ayant un 0 sera consideré comme vide et inversement une case contenant un 1 sera consideré comme remplie par un et un seul cavalier. 
+\subsection{Contraintes}
+\par Afin de pouvoir minimiser, nous devons ajouter nos contraintes. Nous pouvons nous aider du fait qu'une case ne peut que soit être vide, soit contenir un cavalier. Nous allons donc pour chaque case parcourir la matrice de IntVar\footnote{cette matrice represente la grille que nous devons dominer avec le moins de cavalier possible} et ajouter les contraintes de la facon suivante:
+\begin{lstlisting}[language=Java,basicstyle=\tiny]
+public Constraint menace(int ligne,int colonne){
+	ArrayList<Constraint> cavalierAttaque=new ArrayList<Constraint>();
+		
+	//i+1 j+2
+	if ((ligne+1<this.n) && (colonne+2<this.n)){
+		Constraint menace=this.model.arithm(this.echequier[ligne+1][colonne+2], "!=", this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	//i+1 j-2
+	if ((ligne+1<this.n) && (colonne-2>=0)){
+		Constraint menace=this.model.arithm(this.echequier[ligne+1][colonne-2], "!=", this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	
+	//i-1 j+2
+	if ((ligne-1>=0) && (colonne+2<this.n)){
+		Constraint menace=this.model.arithm(this.echequier[ligne-1][colonne+2], "!=", this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+	
+	//i-1 j-2
+	if ((ligne-1>=0) && (colonne-2>=0)){
+		Constraint menace=this.model.arithm(this.echequier[ligne-1][colonne-2], "!=", this.echequier[ligne][colonne]);
+		cavalierAttaque.add(menace);
+	}
+		
+		if ((ligne+2<this.n) && (colonne+1<this.n)){
+			//i+2 j+1
+			Constraint menace=this.model.arithm(this.echequier[ligne+2][colonne+1], "!=", this.echequier[ligne][colonne]);
+			cavalierAttaque.add(menace);
+		}
+		
+		if ((ligne+2<this.n) && (colonne-1>=0)){
+			//i+2 j-1
+			Constraint menace=this.model.arithm(this.echequier[ligne+2][colonne-1], "!=",this.echequier[ligne][colonne]);
+			cavalierAttaque.add(menace);
+		}
+		
+		if ((ligne-2>=0) && (colonne+1<this.n)){
+			//i-2 j+1
+			Constraint menace=this.model.arithm(this.echequier[ligne-2][colonne+1], "!=",this.echequier[ligne][colonne]);
+			cavalierAttaque.add(menace);
+		}
+		if ((ligne-2>=0) && (colonne-1>=0)){
+			//i-2 j-1
+			Constraint menace=this.model.arithm(this.echequier[ligne-2][colonne-1], "!=", this.echequier[ligne][colonne]);
+			cavalierAttaque.add(menace);
+		}
+		if (!cavalierAttaque.isEmpty()){
+			return this.model.or(cavalierAttaque.toArray(new Constraint[]{}));
+		}
+		return null;
+		
+	}
+\end{lstlisting}
 
 \section{Question 5}
 
