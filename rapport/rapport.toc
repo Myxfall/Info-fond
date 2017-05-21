@@ -22,7 +22,8 @@
 \contentsline {subsection}{\numberline {5.2}Exemple d'utilisation}{8}{subsection.5.2}
 \contentsline {section}{\numberline {6}Question 5}{8}{section.6}
 \contentsline {subsection}{\numberline {6.1}Contraintes CSP}{8}{subsection.6.1}
-\contentsline {subsubsection}{\numberline {6.1.1}Parser}{9}{subsubsection.6.1.1}
-\contentsline {subsection}{\numberline {6.2}Placements des cam\IeC {\'e}ras}{10}{subsection.6.2}
-\contentsline {subsection}{\numberline {6.3}Contraintes camera}{10}{subsection.6.3}
-\contentsline {subsection}{\numberline {6.4}Affichage de la solution}{10}{subsection.6.4}
+\contentsline {subsection}{\numberline {6.2}Parser}{9}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Placements des cam\IeC {\'e}ras}{10}{subsection.6.3}
+\contentsline {subsection}{\numberline {6.4}Contraintes camera}{10}{subsection.6.4}
+\contentsline {subsection}{\numberline {6.5}Affichage de la solution}{10}{subsection.6.5}
+\contentsline {section}{\numberline {7}Conclusion}{10}{section.7}

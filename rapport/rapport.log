@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.21)  21 MAY 2017 18:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.21)  21 MAY 2017 18:44
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -793,13 +793,13 @@ LaTeX Info: Redefining \nameref on input line 17.
  [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
- <img/q3.png, id=170, 568.1225pt x 102.3825pt>
+ <img/q3.png, id=175, 568.1225pt x 102.3825pt>
 File: img/q3.png Graphic file (type png)
 
 <use img/q3.png>
 Package pdftex.def Info: img/q3.png used on input line 138.
 (pdftex.def)             Requested size: 455.24411pt x 82.04358pt.
- <img/q31.png, id=172, 566.115pt x 103.38625pt>
+ <img/q31.png, id=177, 566.115pt x 103.38625pt>
 File: img/q31.png Graphic file (type png)
 
 <use img/q31.png>
@@ -913,7 +913,7 @@ Overfull \hbox (63.3502pt too wide) in paragraph at lines 389--390
 ][] 
  []
 
-<img/q4.png, id=370, 529.98pt x 99.37125pt>
+<img/q4.png, id=376, 529.98pt x 99.37125pt>
 File: img/q4.png Graphic file (type png)
  <use img/q4.png>
 Package pdftex.def Info: img/q4.png used on input line 405.
@@ -942,13 +942,13 @@ m/m/it/10 ; \OMS/cmsy/m/n/10 9\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 = 1)]\OMS/cm
 sy/m/n/10 _
  []
 
-<img/gridExample.png, id=403, 71.26625pt x 91.34125pt>
+<img/gridExample.png, id=408, 71.26625pt x 91.34125pt>
 File: img/gridExample.png Graphic file (type png)
 
 <use img/gridExample.png>
 Package pdftex.def Info: img/gridExample.png used on input line 437.
 (pdftex.def)             Requested size: 71.26605pt x 91.34102pt.
- <img/q5.png, id=404, 548.0475pt x 167.62625pt>
+ <img/q5.png, id=409, 548.0475pt x 167.62625pt>
 File: img/q5.png Graphic file (type png)
 
 <use img/q5.png>
@@ -959,25 +959,25 @@ File: img/q5.png Graphic file (type png)
  <use img/q5.png>
 Package pdftex.def Info: img/q5.png used on input line 490.
 (pdftex.def)             Requested size: 451.68915pt x 138.15523pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 493.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 495.
 [10] [11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 493.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 495.
  (./rapport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 493.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 493.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 495.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 495.
 Package rerunfilecheck Info: File `rapport.out' has not changed.
-(rerunfilecheck)             Checksum: 5A700E7B4069CFC79CDC3E8DD2F38027;1680.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 493.
+(rerunfilecheck)             Checksum: B1F1E8BE59500F5C39A68A1DD35E1695;1716.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 495.
  ) 
 Here is how much of TeX's memory you used:
- 10154 strings out of 493014
- 144179 string characters out of 6133351
- 322754 words of memory out of 5000000
- 13304 multiletter control sequences out of 15000+600000
+ 10156 strings out of 493014
+ 144189 string characters out of 6133351
+ 322751 words of memory out of 5000000
+ 13305 multiletter control sequences out of 15000+600000
  10681 words of font info for 38 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  29i,8n,42p,1574b,1889s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1001,10 +1001,10 @@ texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2016/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2016/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmti7.pfb>
-Output written on rapport.pdf (11 pages, 323176 bytes).
+Output written on rapport.pdf (11 pages, 323597 bytes).
 PDF statistics:
- 567 PDF objects out of 1000 (max. 8388607)
- 518 compressed objects within 6 object streams
- 263 named destinations out of 1000 (max. 500000)
- 242 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 572 PDF objects out of 1000 (max. 8388607)
+ 523 compressed objects within 6 object streams
+ 264 named destinations out of 1000 (max. 500000)
+ 250 words of extra memory for PDF output out of 10000 (max. 10000000)
 
