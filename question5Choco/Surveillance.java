@@ -53,7 +53,7 @@ public class Surveillance {
 	 * @throws FileNotFoundException
 	 */
 	public void numberOfCharPerLine() throws FileNotFoundException{
-		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
+		BufferedReader bR= new BufferedReader(new FileReader(this.filename));
 		String currentLine;
 		try {
 			currentLine = bR.readLine();
@@ -69,7 +69,7 @@ public class Surveillance {
 	 * @throws FileNotFoundException
 	 */
 	public void numberOfLines() throws FileNotFoundException{
-		BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
+		BufferedReader bR= new BufferedReader(new FileReader(this.filename));
 		int count=0;
 		String currentLine;
 		try {
@@ -91,7 +91,7 @@ public class Surveillance {
 		try {
 			this.numberOfCharPerLine();
 			this.numberOfLines();
-			BufferedReader bR= new BufferedReader(new FileReader("./question5Choco/"+this.filename));
+			BufferedReader bR= new BufferedReader(new FileReader(this.filename));
 			currentLine=bR.readLine();
 			this.grid=new String[this.nbrLigne][this.nbrColonne];
 			int count=0;
