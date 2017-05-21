@@ -279,12 +279,12 @@ public Constraint Menace(Piece pieceCible){
 Ce qu'on fait ici c'est tout simplement dire que pour un cavalier, la pièce qui est menacé par ce cavalier doit se trouver à la position du saute du cavalier.
 
 \subsection{Contrainte Vide}
-Nous nous sommes rendu compte qu'on a besoin de cette classe juste pour certaintes fonctionne comme l'affichage et comme la verification qu'une pièce qui doit attaque ou qui se fait attaquer n'est pas une pièce vide. Il n'y a donc aucun intérêt a montrer les contraintes dans ce cas puisqu'il ne renvoi qu'un null, on n'utilise jamais cette fonction menace pour ce type de pièce mais puisque nous avons choisi de faire une classe abstraite pour toutes les pièces, il a été nécessaire de devoir redéfinir cette méthode ici.
+Nous nous sommes rendu compte que nous avons besoin de cette classe pour certaines fonctionnes comme l'affichage et comme la verification qu'une pièce qui doit attaquer ou qui se fait attaquer n'est pas une pièce vide. Il n'y a donc aucun intérêt à montrer les contraintes dans ce cas puisque la classe ne renvoi qu'un null, nous n'utilise jamais cette fonction menace pour ce type de pièce mais puisque nous avons choisi de faire une classe abstraite pour toutes les pièces, il a été nécessaire de devoir redéfinir cette méthode ici.
 
 Ce qui ne faut pas oublier de mentionner c'est que cette classe nous sert également pour les positions. En effet le fait de verifier a chaque fois que chaque pièce est distincte oblige l'utilisation des pièces Vides qui ont, elles aussi une position.
 
 \subsection{Question Bonus}
-\par Pour cette question bonus, il nous a été demander de pouvoir laisser le choix a un utilisateur de définir lui meme un type de pièce. Pour cela nous avons simuler un utilisateur qui creer une classe Pion. Cette classe tout comme les autres pièces herite de la classe abstraite Piece et doit definir imperativement la methode: \textit{public Constraint Menace(Piece pieceCible)\{\}}
+\par Pour cette question bonus, il nous a été demandé de pouvoir laisser le choix à un utilisateur de définir lui meme un type de pièce. Pour cela nous avons simulé un utilisateur créant une nouvelle classe Pion. Cette classe tout comme les autres pièces herite de la classe abstraite Piece et doit definir imperativement la methode: \textit{public Constraint Menace(Piece pieceCible)\{\}}
 
 Voici ce que nous avons defini pour le type de pièce Pion:
 
@@ -316,9 +316,9 @@ public Constraint Menace(Piece pieceCible){
 }
 \end{lstlisting}
 
-Au echec le pion peut aller dans une seule direction, nous avons voulu dresser le cas ou c'est un pion qui par dans toutes les directions. Pour pouvoir faire fonctionner ce Pion, l'utilisateur devra modifier le fichier Main.java afin d'ajouter la possibilité de specifier le nombre de Pion et d'utiliser ce nombre dans la classe Jeu.java afin de creer le nombre d'instance necessaire et de les ajouter dans le tableau avec toutes les pièces. Par la suite il pourra tester son programme avec le nouveau type de pièce ajouté.
+Au echec le pion peut aller dans une seule direction, nous avons voulu dresser le cas ou c'est un pion qui part dans toutes les directions. Pour pouvoir faire fonctionner ce Pion, l'utilisateur devra modifier le fichier Main.java afin d'ajouter la possibilité de specifier le nombre de Pion et d'utiliser ce nombre dans la classe Jeu.java afin de creer le nombre d'instance necessaire et de les ajouter dans le tableau avec toutes les pièces. Par la suite il pourra tester son programme avec le nouveau type de pièce ajouté.
 \section{Question 4}
-\par Pour cette question nous avons dut implementer une programme qui pour une grille de taille n va nous donner le nombre minimal de cavalier afin que le problème de domination\footnote{soit une case est occupé soit elle est menacé} soit respecté. Nous sommes parti sur une matrice de IntVar de taille $n*n$ avec pour chaque case un domaine compris entre 0 et 1. Nous avons defini au prealable qu'une case ayant un 0 sera consideré comme vide et inversement une case contenant un 1 sera consideré comme remplie par un et un seul cavalier. 
+\par Pour cette question nous avons du implementer une programme qui pour une grille de taille n va nous donner le nombre minimal de cavalier afin que le problème de domination\footnote{soit une case est occupé soit elle est menacé} soit respecté. Nous sommes parti sur une matrice de IntVar de taille $n*n$ avec pour chaque case un domaine compris entre 0 et 1. Nous avons defini au prealable qu'une case ayant un 0 sera considerée comme vide et inversement une case contenant un 1 sera considerée comme remplie par un et un seul cavalier. 
 \subsection{Contraintes}
 \par Afin de pouvoir minimiser, nous devons ajouter nos contraintes. Nous pouvons nous aider du fait qu'une case ne peut que soit être vide, soit contenir un cavalier. Nous allons donc pour chaque case parcourir la matrice de IntVar\footnote{cette matrice represente la grille que nous devons dominer avec le moins de cavalier possible} et ajouter les contraintes de la facon suivante:
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
@@ -374,10 +374,9 @@ public Constraint menace(int ligne,int colonne){
 		
 	}
 \end{lstlisting}
+Nous allons simplement dire que pour chaque case, la case attaquante respective, donc la case où doit se trouver un cavalier doit etre differente d'elle meme. En effet nous n'avons que deux valeurs dans le domaine de chaque case ce qui nous laisse l'opportunité de jouer avec la difference entre la case cible et cèlle qui attaque.
 
-Ce que nous fesons ici c'est tout simplement dire que pour chaque case, la case attaquante respective, donc la case où doit se trouver un cavalier doit etre differente d'elle meme. En effet nous avons que deux valeurs dans le domaines de chaque cases ce qui nous laisse l'opportunité de jouer avec la difference entre la case cible et cèlle qui attaque.
-
-Voici comment nous ajoutons nos contraintes et comment nous definison la variable a minimiser:
+Voici comment nous ajoutons nos contraintes et comment nous définissons la variable à minimiser:
 \begin{lstlisting}[language=Java,basicstyle=\tiny]
 public void MinimizationCavalier(){
 	for (int l=0;l<this.n;l++){
@@ -397,7 +396,7 @@ public void MinimizationCavalier(){
 }
 \end{lstlisting}
 
-Puisque a nouveau si une case contient un cavalier, sa valeur sera egale a 1 ou 0 dans le cas d'une case vide, nous ajoutons la contrainte que la somme de toutes les cases doit etre egale au nombre de cavalier qu'on doit minimiser.
+Puisque à nouveau si une case contient un cavalier, sa valeur sera egale à 1 ou 0 dans le cas d'une case vide, nous ajoutons la contrainte impliquant que la somme de toutes les cases doit etre égale au nombre de cavalier que nous devons minimiser.
 
 \subsection{Exemple d'utilisation}
 Voici un exemple d'utilisation:
