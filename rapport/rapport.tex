@@ -68,37 +68,37 @@ c_{F,2}& \vdots & c_{F,n-1}& c_{F,n} &c_{F,n+1} \\
 $$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}),$$ $$\{(b_1, b_2, \ldots, b_9)|b_1 = C, b_2, \ldots b_9 = V\}) $$
 
 
+% \section{Question 2}
+% L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
+% \textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
+% \textbf{Domaines : }
+% $ D = \{Vide, tour, fous, cavalier \} $\\
+% \textbf{Contraintes : } Pour chacune des pièces de l'echequier, si une case est vide, alors il existe au moins un pion qui menace cette case vide
+
+% \subsection{Contraintes tours}
+% 	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins une tour dans la ligne ou la colonne de la case non occupée.
+% $$ c_T = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l, (1 \leq l \leq n) \exists b_{l,j} = T \lor b_{i,j} = V, \forall k (1 \leq k \leq n), \exists b_{i,k} = T\})  $$
+% 	Nous devons aussi indiqué qu'il n'y pas d'autre pion entre la case vide et la tour.  On indique donc que les cases entre la case vide et la case occupé par une tour, doivent non occupées. Nous avons donc une telle contrainte pour la ligne et la colonne de la case vide menacé par une tour.
+% %$$ c_{couple,T} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \} \lor$$ $$b_{i,j} = T, b_{l,k} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V) $$
+% $$ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \})$$
+% $$ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \})$$
+
+% \subsection{Contraintes fous}
+% 	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un fou dans les deux diagonales de la case vide.
+% $$ c_F = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j},\forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l,k (1 \leq l \leq n).(1 \leq k \leq n) \exists b_{l,k} = F \lor$$ $$b_{i,j} = V, \forall l,k (1 \leq l \leq n).(n \leq k \leq 1), \exists b_{l,k} = F\})  $$
+% 	De nouveau nous devons nous assurer qu'il n'y a pas d'autre pions qui gène le fou entre la case vide et ce fou.
+% $$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \})$$
+% $$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \})$$
+
+% \subsection{Contraintes cavaliers:}
+% 		Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un cavalier qui menace la case vide. Pour cela il suffit de verifier qu'il existe une case dans les 8 cases correspondant à l'ensemble des mouvements du cavalier ($\{+1,-1,+2,-2\}$), soit occupé par un cavalier.
+% $$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}),$$ $$\{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in [+1,+2,-1,-2], \exists b_{i,j} = C\}) $$
+
+% \subsection{Contrainte finale:}
+% 	Finalement il n'y a qu'une seule grande contrainte à appliquer à notre problème. Etant donné qu'il suffit qu'un seule pion menace une case vide, nous pouvons relier nos contrainte par des conditions \emph{or}. 
+% $$ C = (C_T \land c_{couple,T_{colonnes}} \land c_{couple,T_{lignes}}) \lor (c_F \land c_{couple,F_{diag1}} \land c_{couple,F_{diag2}}) \lor c_{C,(i,j)}$$
+
 \section{Question 2}
-L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
-\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
-\textbf{Domaines : }
-$ D = \{Vide, tour, fous, cavalier \} $\\
-\textbf{Contraintes : } Pour chacune des pièces de l'echequier, si une case est vide, alors il existe au moins un pion qui menace cette case vide
-
-\subsection{Contraintes tours}
-	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins une tour dans la ligne ou la colonne de la case non occupée.
-$$ c_T = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l, (1 \leq l \leq n) \exists b_{l,j} = T \lor b_{i,j} = V, \forall k (1 \leq k \leq n), \exists b_{i,k} = T\})  $$
-	Nous devons aussi indiqué qu'il n'y pas d'autre pion entre la case vide et la tour.  On indique donc que les cases entre la case vide et la case occupé par une tour, doivent non occupées. Nous avons donc une telle contrainte pour la ligne et la colonne de la case vide menacé par une tour.
-%$$ c_{couple,T} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \} \lor$$ $$b_{i,j} = T, b_{l,k} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V) $$
-$$ c_{couple,T_{colonnes}} = ((x_{i,j}, x_{l,j}), \{(b_{i,j}, b_{l,j})|b_{i,j} = T, b_{l,j} = V, \rightarrow b_{m,j} \forall m (i < m < l), b_{m,j} = V \})$$
-$$ c_{couple,T_{lignes}} = ((x_{i,j}, x_{i,k}), \{(b_{i,j}, b_{i,k})|b_{i,j} = T, b_{i,k} = V, \rightarrow b_{i,m} \forall m (j < m < k), b_{i,m} = V \})$$
-
-\subsection{Contraintes fous}
-	Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un fou dans les deux diagonales de la case vide.
-$$ c_F = ((x_{i,j}, \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)),$$ $$\{b_{i,j},\forall i,j (1 \leq i \leq n).(1 \leq j \leq n)|b_{i,j} = V, \forall l,k (1 \leq l \leq n).(1 \leq k \leq n) \exists b_{l,k} = F \lor$$ $$b_{i,j} = V, \forall l,k (1 \leq l \leq n).(n \leq k \leq 1), \exists b_{l,k} = F\})  $$
-	De nouveau nous devons nous assurer qu'il n'y a pas d'autre pions qui gène le fou entre la case vide et ce fou.
-$$ c_{couple,F_{diag1}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(j < y < k), b_{x,y} = V \})$$
-$$ c_{couple,F_{diag2}} = ((x_{i,j}, x_{l,k}), \{(b_{i,j}, b_{l,k})|b_{i,j} = T, b_{l,k} = V, \rightarrow b_{x,y} \forall x,y (i < x < l).(k < y < j), b_{x,y} = V \})$$
-
-\subsection{Contraintes cavaliers:}
-		Pour chaque case de l'echequier qui n'est pas occupé par un pion, alors il existe au moins un cavalier qui menace la case vide. Pour cela il suffit de verifier qu'il existe une case dans les 8 cases correspondant à l'ensemble des mouvements du cavalier ($\{+1,-1,+2,-2\}$), soit occupé par un cavalier.
-$$ c_{C,(i,j)} = ((x_{i,j}, x_{i+1,j+2}, x_{i+1,j-2}, x_{i-1,j+2}, x_{i-1,j-2}, x_{i+2,j+1}, x_{i+2,j-1}, x_{i-2,j+1}, x_{i-2,j-1}),$$ $$\{(b_1, b_2, \ldots, b_9)|b_1 = V, \forall i,j \in [+1,+2,-1,-2], \exists b_{i,j} = C\}) $$
-
-\subsection{Contrainte finale:}
-	Finalement il n'y a qu'une seule grande contrainte à appliquer à notre problème. Etant donné qu'il suffit qu'un seule pion menace une case vide, nous pouvons relier nos contrainte par des conditions \emph{or}. 
-$$ C = (C_T \land c_{couple,T_{colonnes}} \land c_{couple,T_{lignes}}) \lor (c_F \land c_{couple,F_{diag1}} \land c_{couple,F_{diag2}}) \lor c_{C,(i,j)}$$
-
-\section{Question 2 avec ensemble}
 L'ensemble des cases du jeux $V$ où $ \#V = n^2$ \\
 \textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq n)\}$ , $n^2$ variables de décision \\
 \textbf{Domaines : }
@@ -410,39 +410,58 @@ Voici un exemple d'utilisation:
 	\item[-] -n 4 pour la taille de l'échiquier (ici nous avons défini une taille de 4)
 \end{enumerate}
 \section{Question 5}
+\par Pour cette question nous avons du implementer un programme qui etant donné une grille pouvait calculer le nombre minimal de camera necessaire pour que chaque case soit surveillé. Ce probleme est identique au probleme de domination où chaque case est soit occupé soit surveillé. Pour ce faire nous avons d'abord exprimé ce probleme en CSP.
+
 \subsection{Contraintes CSP}
-	Nous avons un musée qui est reprséenté par une grille de $n * m$\\
-	\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq m)\}$\\
-	\textbf{Domaines : } $ D = \{0, 1, 2, 3, 4, 5\} $ correspondant respectivement à une case vide, une caméra Nord, une caméra Sud, une caméra Est, une caméra Ouest et un mur.\\
-	\textbf{Contraintes : } La contrainte du musée est définie comme ceci: chaque case vide doit être surveillé par au moins une caméra. La solution doit être trouvée avec un nombre de caméra le plus petit possible.
+Nous avons un musée qui est reprséenté par une grille de $n * m$\\
+\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq m)\}$\\
+\textbf{Domaines : } $ D = \{0, 1, 2, 3, 4, 5\} $ correspondant respectivement à une case vide, une caméra Nord, une caméra Sud, une caméra Est, une caméra Ouest et un mur.\\
+\textbf{Contraintes : } La contrainte du musée est définie comme ceci: chaque case vide doit être surveillé par au moins une caméra. La solution doit être trouvée avec un nombre de caméra minimal.
 
-		Pour appliquer la contrainte, il faut donc prendre en compte chaque case du musée.  Pour cela nous prenons chaque $x_{i,j}$ compris dans la taille du musée. Ensuite il faut vérifier que pour chacune de ces cases, si elle est non occupée, il faut qu'elle soit surveillé par au moins une caméra.  Ainsi nous avons une suite d'ensemble de valeurs liées par des relations \emph{OR}, qui nous permet de dire: existe au moins une caméra observant la case vide.
+\par Pour appliquer la contrainte, il faut donc prendre en compte chaque case du musée.  Pour cela nous prenons chaque $x_{i,j}$ compris dans la taille du musée. Ensuite il faut vérifier que pour chacune de ces cases, si elle est non occupée, il faut qu'elle soit surveillé par au moins une caméra.  Ainsi nous avons une suite d'ensemble de valeurs liées par des relations \emph{OR}, qui nous permet de dire: existe au moins une caméra observant la case vide.
 
-		Afin d'être sûr qu'une caméra pointe vers le bon sens, lorsque nous parcourons les lignes et colognes d'une case vide, nous précisons bien qu'il y ai au moins une caméra regardant vers le Nord dans les cases se trouvant en dessous de notre case $x_{i,j}$, et ainsi de suite pours les autres directions.
-		$$ C = ((x_{i,j}, \forall i,j(1 \leq i \leq n ).(1 \leq j \leq m)),\{b_{i,j},\forall i,j(1 \leq i \leq n ).(1 \leq j \leq m)| [(b_{i,j} = 0) \land (\forall k (i < k \leq n), \exists b_{k,j} = 1)] \lor $$
-		$$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < i), \exists b_{k,j} = 2)] \lor $$
-		$$ [(b_{i,j} = 0) \land (\forall k (j < k \leq m), \exists b_{i,k} = 3)] \lor $$
-		$$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < j), \exists b_{i,k} = 4)] \}) $$
+\par Afin d'être sûr qu'une caméra pointe vers le bon sens, lorsque nous parcourons les lignes et colognes d'une case vide, nous précisons bien qu'il y ai au moins une caméra regardant vers le Nord dans les cases se trouvant en dessous de notre case $x_{i,j}$, et ainsi de suite pours les autres directions.
+$$ C = ((x_{i,j}, \forall i,j(1 \leq i \leq n ).(1 \leq j \leq m)),\{b_{i,j},\forall i,j(1 \leq i \leq n ).(1 \leq j \leq m)| [(b_{i,j} = 0) \land (\forall k (i < k \leq n), \exists b_{k,j} = 1)] \lor $$
+$$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < i), \exists b_{k,j} = 2)] \lor $$
+$$ [(b_{i,j} = 0) \land (\forall k (j < k \leq m), \exists b_{i,k} = 3)] \lor $$
+$$ [(b_{i,j} = 0) \land (\forall k (0 \leq k < j), \exists b_{i,k} = 4)] \}) $$
 
-		Afin de réduire le nombre de caméra, nous avons reformulé de la demande d'optimisation.  C'est à dire que nous n'allons plus chercher à minimiser le nombre de caméra, mais à maximiser le nombre de case surveillé, ce qui équivaut à la même solution. En effet en réduisant le nombre de caméra, on maximise le nombre de case surveillé avec un petit nombre de caméra.
+\par Afin de réduire le nombre de caméra, nous avons reformulé de la demande d'optimisation.  C'est à dire que nous n'allons plus chercher à minimiser le nombre de caméra, mais à maximiser le nombre de case surveillé, ce qui équivaut à la même solution. En effet en réduisant le nombre de caméra, on maximise le nombre de case surveillé avec un petit nombre de caméra.
 
-		Il n'y a donc pas de contrainte \emph{CSP} à écrire.  Il suffit de donner dire au programme de trouver la solution avec le plus de case vide possible.
+\par Il n'y a donc pas de contrainte \emph{CSP} à écrire.  Il suffit de donner dire au programme de trouver la solution avec le plus de case vide possible.
 
-	\subsection{Partie implémentation}
-		\subsubsection{Parser}
-			La première chose à faire pour résoudre le problème de minimisation du nombre de caméra dans un musée, et de donner au programme l'architecture du musée.  C'est à dire donner au programme une carte représentant les murs et les trous à surveiller / combler par des caméras.
+\subsubsection{Parser}
+\par La premiere chose a faire c'est de lancer le programme en lui donnant en parametre un fichier qui contiendra l'architecture du musée. Pour ce faire le programme prend en paramètre d'exécution un fichier texte sous le format suivant:
+\begin{figure}[!h]
+\begin{center}
+\includegraphics{img/gridExample.png}
+\end{center}
+\end{figure}
 
-			Pour ce faire le programme prend en paramètre d'éxécution un fichier texte sous le format suivant:
-			\begin{figure}[h]
-			\begin{center}
-				\includegraphics{img/gridExample.png}
-			\end{center}
-			\end{figure}
+\par Une fois que le programme récupère ce fichier, il va récupérer tout d'abord les dimensions du musée sans compter les quatre mur de la pièce.  Une fois terminé, ces valeurs seront donnée aux attributs du programme. Une matrice \emph{grid} est ensuite crée.  Cette matrice représente la situation de la pièce du musée avec les murs interieur, et permettra ainsi au programme de placer les caméras aux bons endroits.
 
-			Une fois que le programme récupère ce fichier, il va récupérer tout d'abord les dimensions du musée sans compter les quatres mur de la pièce.  Une fois terminé, ces valeurs sont donnée aux attributs du programme. Une matrice \emph{grid} est ensuite crée.  Cette matrice représente la situation de la pièce du musée avec les murs, et permettra ainsi au programme de placer les caméras aux bons endroits.
-
-		\subsubsection{Placements des caméras}
-			Maintenant que la matrice \emph{grid} à été initialiser, nous pouvons appliquer nos contraintes en fonction de chaque case de cette matrice. Nous faisons alors appel à \emph{minCamera()}, qui va parcourirs chaque case de notre matrice.  Si la case est différent de "*", qui correspond à un mur, alors nous allons appliquer des contraintes. Pour ce faire nous initialisons un tableau qui va contenir toutes nos contraintes, ce tableau est \emph{contrainteTotal\_OR}. C'est ce tableau qui va permettre d'indiquer au solver, si une case est vide, alors elle est surveillé par au moins une caméra. Ensuite pour la case vide, il va falloir dire: il existe au moins une caméra Sud dans les cases au dessus de notre case vide, ou alors une caméra Nord dans les cases en dessous, ou alors une caméra Est dans les cases à gauche, ou une caméra Ouest dans les cases à droite.  Pour ce faire on crée à nouveau un tableau (\emph{existsCam\_OR}) qui va contenir ces contraintes. On parcours alors en croix les cases adjacentes à la case vide, en prenant soin de nous arrêter lorsque nous rencontrons un mur. Lors de ce parcours, nous ajoutons à notre tableau la contrainte arithmétique: case parcouru $=$ caméra visant notre case vide. Une fois le parcours en croix terminé, il suffit d'ajouter au tableau \emph{contrainteTotal\_OR} quatre contraintes indiquant que la case que nous examinons peut aussi être remplit par une caméra. Il ne reste plus qu'à poster les contraintes du tableau grâce à un \emph{post()} de notre tableau.
+\subsection{Placements des caméras}
+Maintenant que la matrice \emph{grid} à été initialiser, nous pouvons appliquer nos contraintes en fonction de chaque case de cette matrice. Nous faisons alors appel à \emph{minCamera()}, qui va parcourirs chaque case de notre matrice.  Si la case est différent de "*", c'est à dire un mur, alors nous allons appliquer nos contraintes. Pour ce faire nous initialisons un tableau qui va contenir toutes nos contraintes, ce tableau est \emph{contrainteTotal\_OR}. C'est ce tableau qui va permettre d'indiquer au solver, si une case est vide, alors elle est surveillé par au moins une caméra. Ensuite pour la case vide, il va falloir dire: il existe au moins une caméra Sud dans les cases au dessus de notre case vide, ou alors une caméra Nord dans les cases en dessous, ou alors une caméra Est dans les cases à gauche, ou une caméra Ouest dans les cases à droite.  Pour ce faire on crée à nouveau un tableau (\emph{existsCam\_OR}) qui va contenir ces contraintes. On parcours alors en croix les cases adjacentes à la case vide, en prenant soin de nous arrêter lorsque nous rencontrons un mur. Lors de ce parcours, nous ajoutons à notre tableau la contrainte arithmétique: case parcouru $=$ caméra visant notre case vide. Une fois le parcours en croix terminé, il suffit d'ajouter au tableau \emph{contrainteTotal\_OR} quatre contraintes indiquant que la case que nous examinons peut aussi être remplit par une caméra. Il ne reste plus qu'à poster les contraintes du tableau grâce à un \emph{post()} de notre tableau.
+\subsection{Contrainte camera nord}
+Pour ce qui est d'une camera nord, voici ce qu'on ajoute comme contrainte:
+\begin{lstlisting}[language=Java,basicstyle=\tiny]
+public void MinimizationCavalier(){
+	for (int l=0;l<this.n;l++){
+		for (int k=0;k<this.n;k++){
+			if (this.menace(l,k)!=null){ //si il existe une contrainte
+				this.menace(l,k).post();
+			}
+			else{
+				this.model.arithm(this.echequier[l][k], "=",1).post(); //sinon c'est une case occupe ->cavalier
+			}
+			this.sum=this.sum.add(this.echequier[l][k]).intVar();
+		}	
+	}
+	this.numCavalier.eq(sum).post();
+	this.model.setObjective(Model.MINIMIZE, this.numCavalier);
+	[...]
+}
+\end{lstlisting}
 
 		\subsubsection{Affichage de la solution}
 			Pour afficher la solution, il ne reste plus qu'à parcourirs le tableau contenant les différentes positions des caméras utilisé par le solver (\emph{this.salle}).  Ce tableau contient la structure de la salle, les cases vides, et le entiers correspondant au caméra et leur sens.
