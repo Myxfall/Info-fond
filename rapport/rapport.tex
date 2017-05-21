@@ -382,11 +382,11 @@ Voici comment nous ajoutons nos contraintes et comment nous definison la variabl
 public void MinimizationCavalier(){
 	for (int l=0;l<this.n;l++){
 		for (int k=0;k<this.n;k++){
-			if (this.menace(l,k)!=null){
+			if (this.menace(l,k)!=null){ //si il existe une contrainte
 				this.menace(l,k).post();
 			}
 			else{
-				this.model.arithm(this.echequier[l][k], "=",1).post();
+				this.model.arithm(this.echequier[l][k], "=",1).post(); //sinon c'est une case occupe ->cavalier
 			}
 			this.sum=this.sum.add(this.echequier[l][k]).intVar();
 		}	
@@ -401,6 +401,11 @@ Puisque a nouveau si une case contient un cavalier, sa valeur sera egale a 1 ou 
 
 \subsection{Exemple d'utilisation}
 Voici un exemple d'utilisation:
+\begin{figure}[!h]
+  \includegraphics[width=\linewidth]{img/q4.png}
+  \caption{Exemple de lancement problème independance}
+\end{figure}
+
 \section{Question 5}
 	Nous avons un musée qui est reprséenté par une grille de $n * m$\\
 	\textbf {Variables de décision} $ X = \{x_{i,j} | \forall i,j (1 \leq i \leq n).(1 \leq j \leq m)\}$\\
@@ -427,7 +432,7 @@ Voici un exemple d'utilisation:
 			Pour ce faire le programme prend en paramètre d'éxécution un fichier texte sous le format suivant:
 			\begin{figure}[h]
 			\begin{center}
-				\includegraphics{figs/gridExample.png}
+				\includegraphics{img/gridExample.png}
 			\end{center}
 			\end{figure}
 
@@ -442,7 +447,7 @@ Voici un exemple d'utilisation:
 		\subsubsection{Exemple}
 			\begin{figure}[h]
 			\begin{center}
-				\includegraphics[scale=0.7]{figs/sol.png}
+				\includegraphics[scale=0.7]{img/sol.png}
 			\end{center}
 			\end{figure}
 \end{document}
